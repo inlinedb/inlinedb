@@ -5,14 +5,20 @@ const sinon = require('sinon');
 
 describe('file', () => {
 
-  const location = 'location';
+  const dbName = 'db-name';
   let sandbox;
 
-  beforeEach(() => sandbox = sinon.sandbox.create());
+  beforeEach(() => {
+
+    sandbox = sinon.sandbox.create();
+
+    sandbox.stub(fs, 'statSync');
+
+  });
 
   afterEach(() => sandbox.restore());
 
-  describe('when checking if it exists', () => {
+  describe('when checking if idb exists', () => {
 
     const isFile = true;
     let stats;
@@ -21,13 +27,15 @@ describe('file', () => {
 
       stats = {isFile: sandbox.stub().returns(isFile)};
 
-      sandbox.stub(fs, 'statSync').returns(stats);
+      fs.statSync.returns(stats);
 
     });
 
     it('should get file stats', () => {
 
-      file.fileExists(location);
+      file.doesIDBExist(dbName);
+
+      const location = `./${dbName}/.idb`;
 
       sinon.assert.calledOnce(fs.statSync);
       sinon.assert.calledWithExactly(fs.statSync, location);
@@ -36,7 +44,7 @@ describe('file', () => {
 
     it('should check if it is a file', () => {
 
-      file.fileExists(location);
+      file.doesIDBExist(dbName);
 
       sinon.assert.calledOnce(stats.isFile);
       sinon.assert.calledWithExactly(stats.isFile);
@@ -45,9 +53,9 @@ describe('file', () => {
 
     it('should return true if file exists', () => {
 
-      const fileExists = file.fileExists(location);
+      const doesIDBExist = file.doesIDBExist(dbName);
 
-      expect(fileExists).to.equal(isFile);
+      expect(doesIDBExist).to.equal(isFile);
 
     });
 
@@ -55,9 +63,9 @@ describe('file', () => {
 
       fs.statSync.throws();
 
-      const fileExists = file.fileExists(location);
+      const doesIDBExist = file.doesIDBExist(dbName);
 
-      expect(fileExists).to.equal(false);
+      expect(doesIDBExist).to.equal(false);
 
     });
 

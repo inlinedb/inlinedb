@@ -1,5 +1,7 @@
 const fs = require('fs');
 
+const getIDBLocation = dbName => `./${dbName}/.idb`;
+
 const fileExists = location => {
 
   try {
@@ -14,6 +16,9 @@ const fileExists = location => {
 
 };
 
+const doesIDBExist = dbName =>
+  fileExists(getIDBLocation(dbName));
+
 module.exports = {
-  fileExists
+  doesIDBExist
 };
