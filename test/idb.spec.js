@@ -16,6 +16,7 @@ describe('IDB', () => {
 
     sandbox.stub(mkdirp, 'sync');
     sandbox.stub(file, 'doesIDBExist');
+    sandbox.stub(file, 'loadIDB');
 
   });
 
@@ -40,9 +41,35 @@ describe('IDB', () => {
 
   describe('when idb exists', () => {
 
+    let config;
+
+    beforeEach(() => {
+
+      config = {config: 'config'};
+
+      file.loadIDB.returns(config);
+      file.doesIDBExist.returns(true);
+
+      idb = new IDB(dbName);
+
+    });
+
     it('should not sync database folder', () => {
 
       sinon.assert.notCalled(mkdirp.sync);
+
+    });
+
+    it('should load the idb configuration', () => {
+
+      sinon.assert.calledOnce(file.loadIDB);
+      sinon.assert.calledWithExactly(file.loadIDB, dbName);
+
+    });
+
+    it('should merge the config with idb', () => {
+
+      expect(idb).to.include(config);
 
     });
 
