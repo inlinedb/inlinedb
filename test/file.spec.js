@@ -8,13 +8,7 @@ describe('file', () => {
   const dbName = 'db-name';
   let sandbox;
 
-  beforeEach(() => {
-
-    sandbox = sinon.sandbox.create();
-
-    sandbox.stub(fs, 'statSync');
-
-  });
+  beforeEach(() => sandbox = sinon.sandbox.create());
 
   afterEach(() => sandbox.restore());
 
@@ -27,7 +21,7 @@ describe('file', () => {
 
       stats = {isFile: sandbox.stub().returns(isFile)};
 
-      fs.statSync.returns(stats);
+      sandbox.stub(fs, 'statSync').returns(stats);
 
     });
 
@@ -101,6 +95,28 @@ describe('file', () => {
       };
 
       expect(config).to.deep.equal(expectedConfig);
+
+    });
+
+  });
+
+  describe('when saving idb configuration', () => {
+
+    const idbConfig = {config: 'config'};
+    const location = `./${dbName}/.idb`;
+
+    beforeEach(() => {
+
+      sandbox.stub(fs, 'writeFileSync');
+
+      file.saveIDB(dbName, idbConfig);
+
+    });
+
+    it('should write it to a file', () => {
+
+      sinon.assert.calledOnce(fs.writeFileSync);
+      sinon.assert.calledWithExactly(fs.writeFileSync, location, JSON.stringify(idbConfig));
 
     });
 

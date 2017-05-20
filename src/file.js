@@ -25,10 +25,13 @@ const loadIDB = dbName => {
 
 };
 
+const saveIDB = (dbName, idbConfig) => fs.writeFileSync(getIDBLocation(dbName), JSON.stringify(idbConfig));
+
 const doesIDBExist = dbName =>
   fileExists(getIDBLocation(dbName));
 
 module.exports = {
   doesIDBExist,
-  loadIDB
+  loadIDB,
+  saveIDB
 };
