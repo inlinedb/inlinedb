@@ -8,5 +8,18 @@
   "bugs": {
     "url": "https://github.com/inlinedb/inlinedb/issues"
   },
-  "homepage": "https://github.com/inlinedb/inlinedb#readme"
+  "engines": {
+    "node": ">=7"
+  },
+  "homepage": "https://github.com/inlinedb/inlinedb#readme",
+  "devDependencies": {
+    "chai": "3.5.0",
+    "eslint": "3.19.0",
+    "mocha": "3.4.1",
+    "sinon": "2.2.0"
+  },
+  "dependencies": {
+    "mkdirp": "0.5.1",
+    "rimraf": "2.6.1"
+  }
 }
