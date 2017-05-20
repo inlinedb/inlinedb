@@ -1,0 +1,12 @@
+{
+  "name": "inlinedb",
+  "version": "1.7.1",
+  "description": "A portable database for node applications",
+  "repository": "inlinedb/inlinedb",
+  "author": "Gopikrishna Sathyamurthy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/inlinedb/inlinedb/issues"
+  },
+  "homepage": "https://github.com/inlinedb/inlinedb#readme"
+}
