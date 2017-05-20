@@ -21,5 +21,9 @@
   "dependencies": {
     "mkdirp": "0.5.1",
     "rimraf": "2.6.1"
+  },
+  "scripts": {
+    "eslint": "eslint . --ignore-path .gitignore",
+    "test": "mocha"
   }
 }
