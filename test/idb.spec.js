@@ -1,5 +1,5 @@
 const {IDB} = require('../src/idb');
-const {expect} = require('chai');
+const {expect} = require('code');
 const file = require('../src/file');
 const mkdirp = require('mkdirp');
 const sinon = require('sinon');
@@ -15,8 +15,7 @@ describe('IDB', () => {
     sandbox = sinon.sandbox.create();
 
     sandbox.stub(mkdirp, 'sync');
-    sandbox.stub(file, 'doesIDBExist');
-    sandbox.stub(file, 'loadIDB');
+    sandbox.stub(file);
 
   });
 
@@ -26,7 +25,7 @@ describe('IDB', () => {
 
     idb = new IDB(dbName);
 
-    expect(idb).to.be.an('object');
+    expect(idb).to.be.object();
 
   });
 
@@ -41,13 +40,13 @@ describe('IDB', () => {
 
   describe('when idb exists', () => {
 
-    let config;
+    let idbConfig;
 
     beforeEach(() => {
 
-      config = {config: 'config'};
+      idbConfig = {config: 'config'};
 
-      file.loadIDB.returns(config);
+      file.loadIDB.returns(idbConfig);
       file.doesIDBExist.returns(true);
 
       idb = new IDB(dbName);
@@ -67,15 +66,20 @@ describe('IDB', () => {
 
     });
 
-    it('should merge the config with idb', () => {
+    it('should merge the configuration with idb', () => {
 
-      expect(idb).to.include(config);
+      expect(idb).to.include(idbConfig);
 
     });
 
   });
 
   describe('when idb does not exist', () => {
+
+    const defaultConfig = {
+      dbName,
+      tables: []
+    };
 
     beforeEach(() => {
 
@@ -89,6 +93,19 @@ describe('IDB', () => {
 
       sinon.assert.calledOnce(mkdirp.sync);
       sinon.assert.calledWithExactly(mkdirp.sync, dbName);
+
+    });
+
+    it('should have a default configuration', () => {
+
+      expect(idb).to.include(defaultConfig);
+
+    });
+
+    it('should save the default configuration', () => {
+
+      sinon.assert.calledOnce(file.saveIDB);
+      sinon.assert.calledWithExactly(file.saveIDB, dbName, defaultConfig);
 
     });
 
