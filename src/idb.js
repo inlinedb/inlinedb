@@ -1,6 +1,10 @@
+const mkdirp = require('mkdirp');
+
 class IDB {
 
-  constructor() {
+  constructor(dbName) {
+
+    mkdirp.sync(dbName);
 
   }
 
