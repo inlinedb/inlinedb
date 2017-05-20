@@ -71,4 +71,39 @@ describe('file', () => {
 
   });
 
+  describe('when loading idb configuration', () => {
+
+    const idbConfig = new Buffer('{"config": "config"}');
+    const location = `./${dbName}/.idb`;
+    let config;
+
+    beforeEach(() => {
+
+      sandbox.stub(fs, 'readFileSync')
+        .withArgs(location)
+        .returns(idbConfig);
+
+      config = file.loadIDB(dbName);
+
+    });
+
+    it('should read the idb file', () => {
+
+      sinon.assert.calledOnce(fs.readFileSync);
+      sinon.assert.calledWithExactly(fs.readFileSync, location);
+
+    });
+
+    it('should return parsed config', () => {
+
+      const expectedConfig = {
+        config: 'config'
+      };
+
+      expect(config).to.deep.equal(expectedConfig);
+
+    });
+
+  });
+
 });

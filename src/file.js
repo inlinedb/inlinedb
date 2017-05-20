@@ -16,9 +16,19 @@ const fileExists = location => {
 
 };
 
+const loadIDB = dbName => {
+
+  const location = getIDBLocation(dbName);
+  const data = fs.readFileSync(location).toString();
+
+  return JSON.parse(data);
+
+};
+
 const doesIDBExist = dbName =>
   fileExists(getIDBLocation(dbName));
 
 module.exports = {
-  doesIDBExist
+  doesIDBExist,
+  loadIDB
 };
