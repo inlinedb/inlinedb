@@ -1,4 +1,4 @@
-const {expect} = require('chai');
+const {expect} = require('code');
 const {Table} = require('../src/table');
 
 describe('Table', () => {
@@ -13,7 +13,7 @@ describe('Table', () => {
 
   it('should be initialized and used as object', () => {
 
-    expect(table).to.be.an('object');
+    expect(table).to.be.object();
 
   });
 

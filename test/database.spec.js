@@ -1,5 +1,5 @@
 const {Database} = require('../src/database');
-const {expect} = require('chai');
+const {expect} = require('code');
 const idb = require('../src/idb');
 const sinon = require('sinon');
 
@@ -24,7 +24,7 @@ describe('Database', () => {
 
   it('should be initialized and used as object', () => {
 
-    expect(database).to.be.an('object');
+    expect(database).to.be.object();
 
   });
 

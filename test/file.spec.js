@@ -1,5 +1,5 @@
 const file = require('../src/file');
-const {expect} = require('chai');
+const {expect} = require('code');
 const fs = require('fs');
 const sinon = require('sinon');
 
@@ -59,7 +59,7 @@ describe('file', () => {
 
       const doesIDBExist = file.doesIDBExist(dbName);
 
-      expect(doesIDBExist).to.equal(false);
+      expect(doesIDBExist).to.be.false();
 
     });
 
@@ -94,7 +94,7 @@ describe('file', () => {
         config: 'config'
       };
 
-      expect(config).to.deep.equal(expectedConfig);
+      expect(config).to.equal(expectedConfig);
 
     });
 
