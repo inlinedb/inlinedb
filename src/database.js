@@ -1,6 +1,10 @@
+const idb = require('./idb');
+
 class Database {
 
-  constructor() {
+  constructor(dbName) {
+
+    this.idbConfig = new idb.IDB(dbName);
 
   }
 
