@@ -21,7 +21,7 @@ class IDB {
 
       Object.assign(this, {
         idbName,
-        tables: []
+        tables: {}
       });
 
       file.saveIDB(this.idbName, this);
@@ -32,9 +32,11 @@ class IDB {
 
   createTable(tableName) {
 
-    if (!this.tables.includes(tableName)) {
+    if (!this.tables[tableName]) {
 
-      this.tables.push(tableName);
+      this.tables[tableName] = {
+        lastInsertId: 0
+      };
 
       file.saveIDB(this.idbName, this);
 

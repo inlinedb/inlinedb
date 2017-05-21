@@ -97,7 +97,7 @@ describe('IDB', () => {
 
         const defaultConfig = {
           idbName,
-          tables: []
+          tables: {}
         };
 
         expect(idb).to.include(defaultConfig);
@@ -129,7 +129,7 @@ describe('IDB', () => {
 
     it('should not update idb if table exists', () => {
 
-      idb.tables.push(tableName);
+      idb.tables[tableName] = {};
 
       idb.createTable(tableName);
 
@@ -144,6 +144,9 @@ describe('IDB', () => {
       idb.createTable(tableName);
 
       expect(idb.tables).to.include(tableName);
+      expect(idb.tables[tableName]).to.equal({
+        lastInsertId: 0
+      });
 
       sinon.assert.calledOnce(file.saveIDB);
       sinon.assert.calledWithExactly(file.saveIDB, idbName, idb);
