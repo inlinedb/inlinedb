@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const getIDBLocation = dbName => `./${dbName}/.idb`;
+const getIDBLocation = idbName => `./${idbName}/.idb`;
 
 const fileExists = location => {
 
@@ -16,19 +16,19 @@ const fileExists = location => {
 
 };
 
-const loadIDB = dbName => {
+const loadIDB = idbName => {
 
-  const location = getIDBLocation(dbName);
+  const location = getIDBLocation(idbName);
   const data = fs.readFileSync(location).toString();
 
   return JSON.parse(data);
 
 };
 
-const saveIDB = (dbName, idbConfig) => fs.writeFileSync(getIDBLocation(dbName), JSON.stringify(idbConfig));
+const saveIDB = (idbName, idbConfig) => fs.writeFileSync(getIDBLocation(idbName), JSON.stringify(idbConfig));
 
-const doesIDBExist = dbName =>
-  fileExists(getIDBLocation(dbName));
+const doesIDBExist = idbName =>
+  fileExists(getIDBLocation(idbName));
 
 module.exports = {
   doesIDBExist,

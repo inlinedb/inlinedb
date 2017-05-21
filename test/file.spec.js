@@ -5,7 +5,7 @@ const sinon = require('sinon');
 
 describe('file', () => {
 
-  const dbName = 'db-name';
+  const idbName = 'db-name';
   let sandbox;
 
   beforeEach(() => sandbox = sinon.sandbox.create());
@@ -27,9 +27,9 @@ describe('file', () => {
 
     it('should get file stats', () => {
 
-      file.doesIDBExist(dbName);
+      file.doesIDBExist(idbName);
 
-      const location = `./${dbName}/.idb`;
+      const location = `./${idbName}/.idb`;
 
       sinon.assert.calledOnce(fs.statSync);
       sinon.assert.calledWithExactly(fs.statSync, location);
@@ -38,7 +38,7 @@ describe('file', () => {
 
     it('should check if it is a file', () => {
 
-      file.doesIDBExist(dbName);
+      file.doesIDBExist(idbName);
 
       sinon.assert.calledOnce(stats.isFile);
       sinon.assert.calledWithExactly(stats.isFile);
@@ -47,7 +47,7 @@ describe('file', () => {
 
     it('should return true if file exists', () => {
 
-      const doesIDBExist = file.doesIDBExist(dbName);
+      const doesIDBExist = file.doesIDBExist(idbName);
 
       expect(doesIDBExist).to.equal(isFile);
 
@@ -57,7 +57,7 @@ describe('file', () => {
 
       fs.statSync.throws();
 
-      const doesIDBExist = file.doesIDBExist(dbName);
+      const doesIDBExist = file.doesIDBExist(idbName);
 
       expect(doesIDBExist).to.be.false();
 
@@ -68,7 +68,7 @@ describe('file', () => {
   describe('when loading idb configuration', () => {
 
     const idbConfig = new Buffer('{"config": "config"}');
-    const location = `./${dbName}/.idb`;
+    const location = `./${idbName}/.idb`;
     let config;
 
     beforeEach(() => {
@@ -77,7 +77,7 @@ describe('file', () => {
         .withArgs(location)
         .returns(idbConfig);
 
-      config = file.loadIDB(dbName);
+      config = file.loadIDB(idbName);
 
     });
 
@@ -103,13 +103,13 @@ describe('file', () => {
   describe('when saving idb configuration', () => {
 
     const idbConfig = {config: 'config'};
-    const location = `./${dbName}/.idb`;
+    const location = `./${idbName}/.idb`;
 
     beforeEach(() => {
 
       sandbox.stub(fs, 'writeFileSync');
 
-      file.saveIDB(dbName, idbConfig);
+      file.saveIDB(idbName, idbConfig);
 
     });
 

@@ -6,7 +6,7 @@ const sinon = require('sinon');
 
 describe('IDB', () => {
 
-  const dbName = 'db-name';
+  const idbName = 'db-name';
   let idb,
     sandbox;
 
@@ -23,7 +23,7 @@ describe('IDB', () => {
 
   it('should be initialized and used as object', () => {
 
-    idb = new IDB(dbName);
+    idb = new IDB(idbName);
 
     expect(idb).to.be.object();
 
@@ -31,10 +31,10 @@ describe('IDB', () => {
 
   it('should check if file exists', () => {
 
-    new IDB(dbName);
+    new IDB(idbName);
 
     sinon.assert.calledOnce(file.doesIDBExist);
-    sinon.assert.calledWithExactly(file.doesIDBExist, dbName);
+    sinon.assert.calledWithExactly(file.doesIDBExist, idbName);
 
   });
 
@@ -49,7 +49,7 @@ describe('IDB', () => {
       file.loadIDB.returns(idbConfig);
       file.doesIDBExist.returns(true);
 
-      idb = new IDB(dbName);
+      idb = new IDB(idbName);
 
     });
 
@@ -62,7 +62,7 @@ describe('IDB', () => {
     it('should load the idb configuration', () => {
 
       sinon.assert.calledOnce(file.loadIDB);
-      sinon.assert.calledWithExactly(file.loadIDB, dbName);
+      sinon.assert.calledWithExactly(file.loadIDB, idbName);
 
     });
 
@@ -77,7 +77,7 @@ describe('IDB', () => {
   describe('when idb does not exist', () => {
 
     const defaultConfig = {
-      dbName,
+      idbName,
       tables: []
     };
 
@@ -85,14 +85,14 @@ describe('IDB', () => {
 
       file.doesIDBExist.returns(false);
 
-      idb = new IDB(dbName);
+      idb = new IDB(idbName);
 
     });
 
     it('should sync database folder', () => {
 
       sinon.assert.calledOnce(mkdirp.sync);
-      sinon.assert.calledWithExactly(mkdirp.sync, dbName);
+      sinon.assert.calledWithExactly(mkdirp.sync, idbName);
 
     });
 
@@ -105,7 +105,7 @@ describe('IDB', () => {
     it('should save the default configuration', () => {
 
       sinon.assert.calledOnce(file.saveIDB);
-      sinon.assert.calledWithExactly(file.saveIDB, dbName, defaultConfig);
+      sinon.assert.calledWithExactly(file.saveIDB, idbName, defaultConfig);
 
     });
 

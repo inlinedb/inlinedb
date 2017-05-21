@@ -2,9 +2,9 @@ const idb = require('./idb');
 
 class Database {
 
-  constructor(dbName) {
+  constructor(idbName) {
 
-    this.idbConfig = new idb.IDB(dbName);
+    this.idbConfig = new idb.IDB(idbName);
 
   }
 

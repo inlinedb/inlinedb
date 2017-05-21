@@ -5,7 +5,7 @@ const sinon = require('sinon');
 
 describe('Database', () => {
 
-  const dbName = 'db-name';
+  const idbName = 'db-name';
   const idbConfig = {};
   let database,
     sandbox;
@@ -16,7 +16,7 @@ describe('Database', () => {
 
     sandbox.stub(idb, 'IDB').returns(idbConfig);
 
-    database = new Database(dbName);
+    database = new Database(idbName);
 
   });
 
@@ -31,7 +31,7 @@ describe('Database', () => {
   it('should create a new idb configuration', () => {
 
     sinon.assert.calledOnce(idb.IDB);
-    sinon.assert.calledWithExactly(idb.IDB, dbName);
+    sinon.assert.calledWithExactly(idb.IDB, idbName);
     sinon.assert.calledWithNew(idb.IDB);
 
     expect(database.idbConfig).to.equal(idbConfig);

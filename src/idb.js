@@ -2,31 +2,31 @@ const mkdirp = require('mkdirp');
 const file = require('./file');
 
 const defaultConfig = {
-  dbName: '',
+  idbName: '',
   tables: []
 };
 
 class IDB {
 
-  constructor(dbName) {
+  constructor(idbName) {
 
-    this.loadConfig(dbName);
+    this.loadConfig(idbName);
 
   }
 
-  loadConfig(dbName) {
+  loadConfig(idbName) {
 
-    if (file.doesIDBExist(dbName)) {
+    if (file.doesIDBExist(idbName)) {
 
-      Object.assign(this, file.loadIDB(dbName));
+      Object.assign(this, file.loadIDB(idbName));
 
     } else {
 
-      mkdirp.sync(dbName);
+      mkdirp.sync(idbName);
 
-      const idbConfig = Object.assign(this, defaultConfig, {dbName});
+      const idbConfig = Object.assign(this, defaultConfig, {idbName});
 
-      file.saveIDB(dbName, idbConfig);
+      file.saveIDB(idbName, idbConfig);
 
     }
 
