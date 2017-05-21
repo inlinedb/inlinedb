@@ -29,83 +29,124 @@ describe('IDB', () => {
 
   });
 
-  it('should check if file exists', () => {
+  describe('on initialization', () => {
 
-    new IDB(idbName);
+    it('should check if file exists', () => {
 
-    sinon.assert.calledOnce(file.doesIDBExist);
-    sinon.assert.calledWithExactly(file.doesIDBExist, idbName);
+      new IDB(idbName);
+
+      sinon.assert.calledOnce(file.doesIDBExist);
+      sinon.assert.calledWithExactly(file.doesIDBExist, idbName);
+
+    });
+
+    describe('when idb exists', () => {
+
+      let idbConfig;
+
+      beforeEach(() => {
+
+        idbConfig = {config: 'config'};
+
+        file.loadIDB.returns(idbConfig);
+        file.doesIDBExist.returns(true);
+
+        idb = new IDB(idbName);
+
+      });
+
+      it('should not sync database folder', () => {
+
+        sinon.assert.notCalled(mkdirp.sync);
+
+      });
+
+      it('should load the idb configuration', () => {
+
+        sinon.assert.calledOnce(file.loadIDB);
+        sinon.assert.calledWithExactly(file.loadIDB, idbName);
+
+      });
+
+      it('should merge the configuration with idb', () => {
+
+        expect(idb).to.include(idbConfig);
+
+      });
+
+    });
+
+    describe('when idb does not exist', () => {
+
+      beforeEach(() => {
+
+        file.doesIDBExist.returns(false);
+
+        idb = new IDB(idbName);
+
+      });
+
+      it('should sync database folder', () => {
+
+        sinon.assert.calledOnce(mkdirp.sync);
+        sinon.assert.calledWithExactly(mkdirp.sync, idbName);
+
+      });
+
+      it('should have a default configuration', () => {
+
+        const defaultConfig = {
+          idbName,
+          tables: []
+        };
+
+        expect(idb).to.include(defaultConfig);
+
+      });
+
+      it('should save the default configuration', () => {
+
+        sinon.assert.calledOnce(file.saveIDB);
+        sinon.assert.calledWithExactly(file.saveIDB, idbName, idb);
+
+      });
+
+    });
 
   });
 
-  describe('when idb exists', () => {
+  describe('on creating a table', () => {
 
-    let idbConfig;
-
-    beforeEach(() => {
-
-      idbConfig = {config: 'config'};
-
-      file.loadIDB.returns(idbConfig);
-      file.doesIDBExist.returns(true);
-
-      idb = new IDB(idbName);
-
-    });
-
-    it('should not sync database folder', () => {
-
-      sinon.assert.notCalled(mkdirp.sync);
-
-    });
-
-    it('should load the idb configuration', () => {
-
-      sinon.assert.calledOnce(file.loadIDB);
-      sinon.assert.calledWithExactly(file.loadIDB, idbName);
-
-    });
-
-    it('should merge the configuration with idb', () => {
-
-      expect(idb).to.include(idbConfig);
-
-    });
-
-  });
-
-  describe('when idb does not exist', () => {
-
-    const defaultConfig = {
-      idbName,
-      tables: []
-    };
+    const tableName = 'table-name';
 
     beforeEach(() => {
 
-      file.doesIDBExist.returns(false);
-
       idb = new IDB(idbName);
 
-    });
-
-    it('should sync database folder', () => {
-
-      sinon.assert.calledOnce(mkdirp.sync);
-      sinon.assert.calledWithExactly(mkdirp.sync, idbName);
+      file.saveIDB.reset();
 
     });
 
-    it('should have a default configuration', () => {
+    it('should not update idb if table exists', () => {
 
-      expect(idb).to.include(defaultConfig);
+      idb.tables.push(tableName);
+
+      idb.createTable(tableName);
+
+      sinon.assert.notCalled(file.saveIDB);
 
     });
 
-    it('should save the default configuration', () => {
+    it('should update idb if table does not exist', () => {
+
+      expect(idb.tables).to.not.include(tableName);
+
+      idb.createTable(tableName);
+
+      expect(idb.tables).to.include(tableName);
 
       sinon.assert.calledOnce(file.saveIDB);
-      sinon.assert.calledWithExactly(file.saveIDB, idbName, defaultConfig);
+      sinon.assert.calledWithExactly(file.saveIDB, idbName, idb);
 
     });
 

@@ -1,11 +1,6 @@
 const mkdirp = require('mkdirp');
 const file = require('./file');
 
-const defaultConfig = {
-  idbName: '',
-  tables: []
-};
-
 class IDB {
 
   constructor(idbName) {
@@ -24,9 +19,24 @@ class IDB {
 
       mkdirp.sync(idbName);
 
-      const idbConfig = Object.assign(this, defaultConfig, {idbName});
+      Object.assign(this, {
+        idbName,
+        tables: []
+      });
 
-      file.saveIDB(idbName, idbConfig);
+      file.saveIDB(this.idbName, this);
+
+    }
+
+  }
+
+  createTable(tableName) {
+
+    if (!this.tables.includes(tableName)) {
+
+      this.tables.push(tableName);
+
+      file.saveIDB(this.idbName, this);
 
     }
 
