@@ -3,6 +3,19 @@ const fs = require('fs');
 const getIDBLocation = idbName => `./${idbName}/.idb`;
 const getTableLocation = (idbName, tableName) => `./${idbName}/${tableName}/.idb`;
 
+const fileAsyncHandler = (resolve, reject) =>
+  (err, data) => {
+
+    if (err) {
+
+      return reject(err);
+
+    }
+
+    return resolve(data);
+
+  };
+
 const fileExists = location => {
 
   try {
@@ -33,9 +46,17 @@ const saveTable = (idbName, tableName, tableData) =>
     fs.writeFile(
       getTableLocation(idbName, tableName),
       JSON.stringify(tableData),
-      err => (err ? reject : resolve)(err)
+      fileAsyncHandler(resolve, reject)
     )
   );
+
+const loadTable = (idbName, tableName) =>
+  new Promise((resolve, reject) =>
+    fs.readFile(
+      getTableLocation(idbName, tableName),
+      fileAsyncHandler(resolve, reject)
+    ))
+    .then(data => JSON.parse(data.toString()));
 
 const doesIDBExist = idbName =>
   fileExists(getIDBLocation(idbName));
@@ -43,6 +64,7 @@ const doesIDBExist = idbName =>
 module.exports = {
   doesIDBExist,
   loadIDB,
+  loadTable,
   saveIDB,
   saveTable
 };

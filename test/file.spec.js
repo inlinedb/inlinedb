@@ -1,5 +1,5 @@
-const file = require('../src/file');
 const {expect} = require('code');
+const file = require('../src/file');
 const fs = require('fs');
 const sinon = require('sinon');
 
@@ -123,25 +123,25 @@ describe('file', () => {
 
   });
 
-  describe('when saving idb configuration', () => {
+  describe('when saving table data', () => {
 
-    const idbConfig = {config: 'config'};
+    const tableData = {rows: []};
     const location = `./${idbName}/${tableName}/.idb`;
 
     beforeEach(() => sandbox.stub(fs, 'writeFile'));
 
     it('should write it to a file', () => {
 
-      file.saveTable(idbName, tableName, idbConfig);
+      file.saveTable(idbName, tableName, tableData);
 
       sinon.assert.calledOnce(fs.writeFile);
-      sinon.assert.calledWithExactly(fs.writeFile, location, JSON.stringify(idbConfig), sinon.match.func);
+      sinon.assert.calledWithExactly(fs.writeFile, location, JSON.stringify(tableData), sinon.match.func);
 
     });
 
     it('should return a promise', () => {
 
-      const saveTable = file.saveTable(idbName, tableName, idbConfig);
+      const saveTable = file.saveTable(idbName, tableName, tableData);
 
       expect(saveTable).instanceOf(Promise);
 
@@ -151,7 +151,7 @@ describe('file', () => {
 
       fs.writeFile.callsArg(2);
 
-      const err = await file.saveTable(idbName, tableName, idbConfig);
+      const err = await file.saveTable(idbName, tableName, tableData);
 
       expect(err).not.exists();
 
@@ -166,7 +166,66 @@ describe('file', () => {
 
       try {
 
-        err = await file.saveTable(idbName, tableName, idbConfig);
+        err = await file.saveTable(idbName, tableName, tableData);
+
+      } catch (error) {
+
+        err = error;
+
+      } finally {
+
+        expect(err).equals(fileError);
+
+      }
+
+    });
+
+  });
+
+  describe('when loading table data', () => {
+
+    const tableData = {rows: []};
+    const location = `./${idbName}/${tableName}/.idb`;
+
+    beforeEach(() => sandbox.stub(fs, 'readFile'));
+
+    it('should read from a file', () => {
+
+      file.loadTable(idbName, tableName);
+
+      sinon.assert.calledOnce(fs.readFile);
+      sinon.assert.calledWithExactly(fs.readFile, location, sinon.match.func);
+
+    });
+
+    it('should return a promise', () => {
+
+      const loadTable = file.loadTable(idbName, tableName);
+
+      expect(loadTable).instanceOf(Promise);
+
+    });
+
+    it('should resolve if there is no error', async () => {
+
+      fs.readFile.callsArgWith(1, null, new Buffer(JSON.stringify(tableData)));
+
+      const data = await file.loadTable(idbName, tableName);
+
+      expect(data).equals(tableData);
+
+    });
+
+    it('should reject if there is an error', async () => {
+
+      const fileError = 'error';
+      let err;
+
+      fs.readFile.callsArgWith(1, fileError);
+
+      try {
+
+        err = await file.loadTable(idbName, tableName);
 
       } catch (error) {
 
