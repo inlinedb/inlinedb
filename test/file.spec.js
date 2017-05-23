@@ -126,7 +126,7 @@ describe('file', () => {
   describe('when saving table data', () => {
 
     const tableData = {rows: []};
-    const location = `./${idbName}/${tableName}/.table`;
+    const location = `./${idbName}/${tableName}.table`;
 
     beforeEach(() => sandbox.stub(fs, 'writeFile'));
 
@@ -185,7 +185,7 @@ describe('file', () => {
   describe('when loading table data', () => {
 
     const tableData = {rows: []};
-    const location = `./${idbName}/${tableName}/.table`;
+    const location = `./${idbName}/${tableName}.table`;
 
     beforeEach(() => sandbox.stub(fs, 'readFile'));
 

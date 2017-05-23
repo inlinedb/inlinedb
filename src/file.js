@@ -1,7 +1,7 @@
 const fs = require('fs');
 
 const getIDBLocation = idbName => `./${idbName}/.idb`;
-const getTableLocation = (idbName, tableName) => `./${idbName}/${tableName}/.table`;
+const getTableLocation = (idbName, tableName) => `./${idbName}/${tableName}.table`;
 
 const fileAsyncHandler = (resolve, reject) =>
   (err, data) => {
