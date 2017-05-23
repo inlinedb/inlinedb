@@ -1,7 +1,6 @@
 const file = require('./file');
 const query = require('./query');
 
-const tableData = new WeakMap();
 const tableQueries = new WeakMap();
 
 class Table {
@@ -11,10 +10,6 @@ class Table {
     this.idbName = idbName;
     this.tableName = tableName;
 
-    tableData.set(this, {
-      index: {},
-      rows: []
-    });
     tableQueries.set(this, []);
 
   }
