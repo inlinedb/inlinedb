@@ -17,6 +17,7 @@
     "code": "4.0.0",
     "eslint": "3.19.0",
     "mocha": "3.4.1",
+    "nyc": "10.3.2",
     "sinon": "2.2.0"
   },
   "dependencies": {
@@ -25,6 +26,6 @@
   },
   "scripts": {
     "eslint": "eslint . --ignore-path .gitignore",
-    "test": "mocha"
+    "test": "nyc mocha"
   }
 }
