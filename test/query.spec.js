@@ -17,6 +17,8 @@ describe('query', () => {
 
     expect(query.run).function();
 
+    query.run();
+
   });
 
 });
