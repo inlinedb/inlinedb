@@ -18,7 +18,8 @@ describe('Database', () => {
     sandbox = sinon.sandbox.create();
 
     idbConfig = {
-      createTable: sandbox.stub()
+      createTable: sandbox.stub(),
+      idbName
     };
 
     table = {};
@@ -57,7 +58,7 @@ describe('Database', () => {
     it('should instantiate a new table', () => {
 
       sinon.assert.calledOnce(Table.Table);
-      sinon.assert.calledWithExactly(Table.Table, tableName);
+      sinon.assert.calledWithExactly(Table.Table, idbName, tableName);
       sinon.assert.calledWithNew(Table.Table);
 
     });

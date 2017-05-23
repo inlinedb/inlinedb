@@ -13,7 +13,7 @@ class Database {
 
     this.idbConfig.createTable(tableName);
 
-    return new table.Table(tableName);
+    return new table.Table(this.idbConfig.idbName, tableName);
 
   }
 
