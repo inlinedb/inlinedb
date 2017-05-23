@@ -6,6 +6,7 @@ const sinon = require('sinon');
 describe('file', () => {
 
   const idbName = 'db-name';
+  const tableName = 'table-name';
   let sandbox;
 
   beforeEach(() => sandbox = sinon.sandbox.create());
@@ -117,6 +118,65 @@ describe('file', () => {
 
       sinon.assert.calledOnce(fs.writeFileSync);
       sinon.assert.calledWithExactly(fs.writeFileSync, location, JSON.stringify(idbConfig));
+
+    });
+
+  });
+
+  describe('when saving idb configuration', () => {
+
+    const idbConfig = {config: 'config'};
+    const location = `./${idbName}/${tableName}/.idb`;
+
+    beforeEach(() => sandbox.stub(fs, 'writeFile'));
+
+    it('should write it to a file', () => {
+
+      file.saveTable(idbName, tableName, idbConfig);
+
+      sinon.assert.calledOnce(fs.writeFile);
+      sinon.assert.calledWithExactly(fs.writeFile, location, JSON.stringify(idbConfig), sinon.match.func);
+
+    });
+
+    it('should return a promise', () => {
+
+      const saveTable = file.saveTable(idbName, tableName, idbConfig);
+
+      expect(saveTable).instanceOf(Promise);
+
+    });
+
+    it('should resolve if there is no error', async () => {
+
+      fs.writeFile.callsArg(2);
+
+      const err = await file.saveTable(idbName, tableName, idbConfig);
+
+      expect(err).not.exists();
+
+    });
+
+    it('should reject if there is an error', async () => {
+
+      const fileError = 'error';
+      let err;
+
+      fs.writeFile.callsArgWith(2, fileError);
+
+      try {
+
+        err = await file.saveTable(idbName, tableName, idbConfig);
+
+      } catch (error) {
+
+        err = error;
+
+      } finally {
+
+        expect(err).equals(fileError);
+
+      }
 
     });
 
