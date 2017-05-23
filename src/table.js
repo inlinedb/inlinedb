@@ -1,15 +1,18 @@
 const file = require('./file');
 
+const tableData = new WeakMap();
+
 class Table {
 
   constructor(idbName, tableName) {
 
     this.idbName = idbName;
     this.tableName = tableName;
-    this.data = {
+
+    tableData.set(this, {
       index: {},
       rows: []
-    };
+    });
 
   }
 
@@ -18,7 +21,7 @@ class Table {
     return file.saveTable(
       this.idbName,
       this.tableName,
-      this.data
+      tableData.get(this)
     );
 
   }

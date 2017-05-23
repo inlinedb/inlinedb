@@ -27,13 +27,6 @@ describe('Table', () => {
 
   });
 
-  it('should have initial data', () => {
-
-    expect(table.data.rows).empty().array();
-    expect(table.data.index).empty().object();
-
-  });
-
   describe('on saving', () => {
 
     beforeEach(() => {
