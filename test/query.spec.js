@@ -15,9 +15,10 @@ describe('query', () => {
 
   it('should have a function to run queries', () => {
 
-    expect(query.run).function();
+    const queries = [];
+    const data = {rows: []};
 
-    query.run();
+    expect(query.run(queries, data)).equals(data);
 
   });
 
