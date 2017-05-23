@@ -4,6 +4,9 @@ const types = {
   UPDATE: 'UPDATE'
 };
 
+const run = () => {};
+
 module.exports = {
+  run,
   types
 };

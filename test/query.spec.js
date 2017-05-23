@@ -13,4 +13,10 @@ describe('query', () => {
 
   });
 
+  it('should have a function to run queries', () => {
+
+    expect(query.run).function();
+
+  });
+
 });
