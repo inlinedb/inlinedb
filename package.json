@@ -13,6 +13,7 @@
   },
   "homepage": "https://github.com/inlinedb/inlinedb#readme",
   "devDependencies": {
+    "babel-eslint": "7.2.3",
     "code": "4.0.0",
     "eslint": "3.19.0",
     "mocha": "3.4.1",
