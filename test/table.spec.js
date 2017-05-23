@@ -66,9 +66,15 @@ describe('Table', () => {
 
     });
 
-    it('should run the queries yet', () => {
+    it('should not run the queries yet', () => {
 
       sinon.assert.notCalled(query.run);
+
+    });
+
+    it('should not save the tables yet', () => {
+
+      sinon.assert.notCalled(file.saveTable);
 
     });
 
