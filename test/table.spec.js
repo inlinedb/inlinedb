@@ -1,7 +1,8 @@
-const {expect} = require('code');
 const {Table} = require('../src/table');
-const sinon = require('sinon');
+const {expect} = require('code');
 const file = require('../src/file');
+const query = require('../src/query');
+const sinon = require('sinon');
 
 describe('Table', () => {
 
@@ -16,6 +17,7 @@ describe('Table', () => {
     table = new Table(idbName, tableName);
 
     sandbox.stub(file);
+    sandbox.stub(query);
 
   });
 
@@ -29,15 +31,30 @@ describe('Table', () => {
 
   describe('on saving', () => {
 
+    let saveTable;
+
     beforeEach(() => {
 
-      file.saveTable.returns(Promise.resolve());
+      saveTable = Promise.resolve();
+
+      file.saveTable.returns(saveTable);
+
+    });
+
+    it('should run queries', () => {
+
+      const queries = [];
+
+      table.save();
+
+      sinon.assert.calledOnce(query.run);
+      sinon.assert.calledWithExactly(query.run, queries);
 
     });
 
     it('should return a promise', () => {
 
-      expect(table.save()).instanceOf(Promise);
+      expect(table.save()).instanceOf(Promise).equals(saveTable);
 
     });
 
