@@ -31,24 +31,23 @@ describe('Table', () => {
 
   describe('on saving', () => {
 
-    let saveTable;
+    let tableData,
+      loadTable,
+      saveTable,
+      updatedTableData;
 
     beforeEach(() => {
 
+      tableData = {rows: []};
+      updatedTableData = {rows: ['updated']};
+
+      loadTable = Promise.resolve(tableData);
       saveTable = Promise.resolve();
 
       file.saveTable.returns(saveTable);
+      file.loadTable.returns(loadTable);
 
-    });
-
-    it('should run queries', () => {
-
-      const queries = [];
-
-      table.save();
-
-      sinon.assert.calledOnce(query.run);
-      sinon.assert.calledWithExactly(query.run, queries);
+      query.run.returns(updatedTableData);
 
     });
 
@@ -58,17 +57,40 @@ describe('Table', () => {
 
     });
 
-    it('should save the table', () => {
+    it('should load table data', () => {
 
       table.save();
 
-      const data = {
-        index: {},
-        rows: []
-      };
+      sinon.assert.calledOnce(file.loadTable);
+      sinon.assert.calledWithExactly(file.loadTable, idbName, tableName);
 
-      sinon.assert.calledOnce(file.saveTable);
-      sinon.assert.calledWithExactly(file.saveTable, idbName, tableName, data);
+    });
+
+    it('should run the queries yet', () => {
+
+      sinon.assert.notCalled(query.run);
+
+    });
+
+    describe('after loading the data', () => {
+
+      beforeEach(async () => await table.save());
+
+      it('should run queries', () => {
+
+        const queries = [];
+
+        sinon.assert.calledOnce(query.run);
+        sinon.assert.calledWithExactly(query.run, queries, tableData);
+
+      });
+
+      it('should save the table', () => {
+
+        sinon.assert.calledOnce(file.saveTable);
+        sinon.assert.calledWithExactly(file.saveTable, idbName, tableName, updatedTableData);
+
+      });
 
     });
 

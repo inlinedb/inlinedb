@@ -21,13 +21,13 @@ class Table {
 
   save() {
 
-    query.run(tableQueries.get(this));
-
-    return file.saveTable(
-      this.idbName,
-      this.tableName,
-      tableData.get(this)
-    );
+    return file.loadTable(this.idbName, this.tableName)
+      .then(data => query.run(tableQueries.get(this), data))
+      .then(updatedData => file.saveTable(
+        this.idbName,
+        this.tableName,
+        updatedData
+      ));
 
   }
 
