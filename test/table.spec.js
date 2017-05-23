@@ -94,6 +94,40 @@ describe('Table', () => {
 
     });
 
+    describe('after failing to load the data', () => {
+
+      beforeEach(async () => {
+
+        const error = 'table does not exist';
+
+        file.loadTable.returns(Promise.reject(error));
+
+        await table.save();
+
+      });
+
+      it('should run queries on empty data', () => {
+
+        const queries = [];
+        const emptyTableData = {
+          index: {},
+          rows: []
+        };
+
+        sinon.assert.calledOnce(query.run);
+        sinon.assert.calledWithExactly(query.run, queries, emptyTableData);
+
+      });
+
+      it('should save the table', () => {
+
+        sinon.assert.calledOnce(file.saveTable);
+        sinon.assert.calledWithExactly(file.saveTable, idbName, tableName, updatedTableData);
+
+      });
+
+    });
+
   });
 
 });

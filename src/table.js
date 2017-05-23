@@ -21,8 +21,16 @@ class Table {
 
   save() {
 
+    const emptyData = {
+      index: {},
+      rows: []
+    };
+
     return file.loadTable(this.idbName, this.tableName)
-      .then(data => query.run(tableQueries.get(this), data))
+      .then(
+        data => query.run(tableQueries.get(this), data),
+        () => query.run(tableQueries.get(this), emptyData)
+      )
       .then(updatedData => file.saveTable(
         this.idbName,
         this.tableName,
