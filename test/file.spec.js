@@ -174,7 +174,7 @@ describe('file', () => {
 
       } finally {
 
-        expect(err).equals(fileError);
+        expect(err).to.equal(fileError);
 
       }
 
@@ -212,7 +212,7 @@ describe('file', () => {
 
       const data = await file.loadTable(idbName, tableName);
 
-      expect(data).equals(tableData);
+      expect(data).to.equal(tableData);
 
     });
 
@@ -233,7 +233,7 @@ describe('file', () => {
 
       } finally {
 
-        expect(err).equals(fileError);
+        expect(err).to.equal(fileError);
 
       }
 

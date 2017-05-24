@@ -5,7 +5,7 @@ describe('query', () => {
 
   it('should have query types', () => {
 
-    expect(query.types).equals({
+    expect(query.types).to.equal({
       DELETE: 'DELETE',
       INSERT: 'INSERT',
       UPDATE: 'UPDATE'
@@ -18,7 +18,7 @@ describe('query', () => {
     const queries = [];
     const data = {rows: []};
 
-    expect(query.run(queries, data)).equals(data);
+    expect(query.run(queries, data)).to.equal(data);
 
   });
 
@@ -50,7 +50,7 @@ describe('query', () => {
         Object.assign({$idbID: 1}, row)
       ];
 
-      expect(updatedData.rows).equals(expectedRows);
+      expect(updatedData.rows).to.equal(expectedRows);
 
     });
 
@@ -60,7 +60,7 @@ describe('query', () => {
         1: 0
       };
 
-      expect(updatedData.index).equals(expectedIndex);
+      expect(updatedData.index).to.equal(expectedIndex);
 
     });
 
@@ -82,7 +82,7 @@ describe('query', () => {
           Object.assign({$idbID: 3}, row)
         ];
 
-        expect(updatedData.rows).equals(expectedRows);
+        expect(updatedData.rows).to.equal(expectedRows);
 
       });
 
@@ -94,7 +94,7 @@ describe('query', () => {
           3: 2
         };
 
-        expect(updatedData.index).equals(expectedIndex);
+        expect(updatedData.index).to.equal(expectedIndex);
 
       });
 
