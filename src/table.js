@@ -23,6 +23,31 @@ class Table {
 
   }
 
+  query(filter = () => true) {
+
+    return file.loadTable(this.idbName, this.tableName)
+      .then(data => {
+
+        let queriedData = [];
+
+        if (typeof filter === 'function') {
+
+          queriedData = data.rows.filter(filter);
+
+        } else {
+
+          queriedData = [].concat(filter).map($idbID =>
+            data.rows[data.index[$idbID]]
+          );
+
+        }
+
+        return queriedData;
+
+      });
+
+  }
+
   save() {
 
     const emptyData = {

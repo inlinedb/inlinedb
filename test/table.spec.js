@@ -8,8 +8,7 @@ describe('Table', () => {
 
   const idbName = 'db-name';
   const tableName = 'table-name';
-  let loadTable,
-    sandbox,
+  let sandbox,
     table,
     tableData;
 
@@ -18,14 +17,12 @@ describe('Table', () => {
     sandbox = sinon.sandbox.create();
     tableData = {rows: []};
 
-    loadTable = Promise.resolve(tableData);
-
     table = new Table(idbName, tableName);
 
     sandbox.stub(file);
     sandbox.stub(query);
 
-    file.loadTable.returns(loadTable);
+    file.loadTable.returns(Promise.resolve(tableData));
 
   });
 
@@ -56,7 +53,7 @@ describe('Table', () => {
 
     it('should return a promise', () => {
 
-      expect(table.save()).instanceOf(Promise).equals(saveTable);
+      expect(table.save()).instanceOf(Promise).to.equal(saveTable);
 
     });
 
@@ -173,6 +170,93 @@ describe('Table', () => {
 
       sinon.assert.calledOnce(query.run);
       sinon.assert.calledWithExactly(query.run, [insertQuery], tableData);
+
+    });
+
+  });
+
+  describe('on querying rows', () => {
+
+    beforeEach(() => {
+
+      tableData = {
+        index: {
+          10: 0,
+          20: 2,
+          30: 1
+        },
+        rows: [
+          {
+            $idbID: 10,
+            column: 'column awesome'
+          },
+          {
+            $idbID: 30,
+            column: 'column match'
+          },
+          {
+            $idbID: 20,
+            column: 'column random'
+          }
+        ]
+      };
+
+      file.loadTable.returns(Promise.resolve(tableData));
+
+    });
+
+    it('should load the table', () => {
+
+      table.query();
+
+      sinon.assert.calledOnce(file.loadTable);
+      sinon.assert.calledWithExactly(file.loadTable, idbName, tableName);
+
+    });
+
+    it('should return all the rows when there is no filter', async () => {
+
+      const result = await table.query();
+
+      expect(result).to.equal(tableData.rows);
+
+    });
+
+    it('should return the rows satisfied by a filter function', async () => {
+
+      const filterFunction = row => row.column === 'column match';
+      const result = await table.query(filterFunction);
+      const expectedRows = [
+        tableData.rows[1]
+      ];
+
+      expect(result).to.equal(expectedRows);
+
+    });
+
+    it('should return the row with matching id', async () => {
+
+      const id = 10;
+      const result = await table.query(id);
+      const expectedRows = [
+        tableData.rows[0]
+      ];
+
+      expect(result).to.equal(expectedRows);
+
+    });
+
+    it('should return the rows with matching ids', async () => {
+
+      const id1 = 10;
+      const id2 = 20;
+      const result = await table.query([id1, id2]);
+      const expectedRows = [
+        tableData.rows[0],
+        tableData.rows[2]
+      ];
+
+      expect(result).to.equal(expectedRows);
 
     });
 
