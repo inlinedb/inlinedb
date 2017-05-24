@@ -26,7 +26,6 @@ describe('query', () => {
 
     const row = {column: 'column'};
     const insertQuery = {
-      lastInsertId: 0,
       rows: [row],
       type: query.types.INSERT
     };
@@ -37,6 +36,7 @@ describe('query', () => {
 
       data = {
         index: {},
+        lastInsertId: 0,
         rows: []
       };
 

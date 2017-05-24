@@ -120,6 +120,7 @@ describe('Table', () => {
         const queries = [];
         const emptyTableData = {
           index: {},
+          lastInsertId: 0,
           rows: []
         };
 

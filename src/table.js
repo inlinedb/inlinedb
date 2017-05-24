@@ -27,6 +27,7 @@ class Table {
 
     const emptyData = {
       index: {},
+      lastInsertId: 0,
       rows: []
     };
 

@@ -2,7 +2,7 @@ const getNextId = lastInsertId => lastInsertId + 1;
 
 const insertRows = (data, query) => {
 
-  let {lastInsertId} = query;
+  let {lastInsertId} = data;
 
   const rows = data.rows.concat(
     query.rows.map(row => {
@@ -21,6 +21,7 @@ const insertRows = (data, query) => {
 
   return {
     index,
+    lastInsertId,
     rows
   };
 
