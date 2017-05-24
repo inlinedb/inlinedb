@@ -5,6 +5,9 @@ class IDB {
 
   constructor(idbName) {
 
+    this.idbName = idbName;
+    this.tables = {};
+
     this.loadConfig(idbName);
 
   }
@@ -19,14 +22,15 @@ class IDB {
 
       mkdirp.sync(idbName);
 
-      Object.assign(this, {
-        idbName,
-        tables: {}
-      });
-
-      file.saveIDB(this.idbName, this);
+      this.save();
 
     }
+
+  }
+
+  save() {
+
+    file.saveIDB(this.idbName, this);
 
   }
 
@@ -38,7 +42,7 @@ class IDB {
         lastInsertId: 0
       };
 
-      file.saveIDB(this.idbName, this);
+      this.save();
 
     }
 
