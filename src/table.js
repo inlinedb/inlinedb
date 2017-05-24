@@ -14,6 +14,15 @@ class Table {
 
   }
 
+  insert(...rows) {
+
+    tableQueries.get(this).push({
+      rows,
+      type: query.types.INSERT
+    });
+
+  }
+
   save() {
 
     const emptyData = {

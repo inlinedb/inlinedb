@@ -8,16 +8,24 @@ describe('Table', () => {
 
   const idbName = 'db-name';
   const tableName = 'table-name';
-  let sandbox,
-    table;
+  let loadTable,
+    sandbox,
+    table,
+    tableData;
 
   beforeEach(() => {
 
     sandbox = sinon.sandbox.create();
+    tableData = {rows: []};
+
+    loadTable = Promise.resolve(tableData);
+
     table = new Table(idbName, tableName);
 
     sandbox.stub(file);
     sandbox.stub(query);
+
+    file.loadTable.returns(loadTable);
 
   });
 
@@ -31,21 +39,16 @@ describe('Table', () => {
 
   describe('on saving', () => {
 
-    let tableData,
-      loadTable,
-      saveTable,
+    let saveTable,
       updatedTableData;
 
     beforeEach(() => {
 
-      tableData = {rows: []};
       updatedTableData = {rows: ['updated']};
 
-      loadTable = Promise.resolve(tableData);
       saveTable = Promise.resolve();
 
       file.saveTable.returns(saveTable);
-      file.loadTable.returns(loadTable);
 
       query.run.returns(updatedTableData);
 
@@ -131,6 +134,44 @@ describe('Table', () => {
         sinon.assert.calledWithExactly(file.saveTable, idbName, tableName, updatedTableData);
 
       });
+
+    });
+
+  });
+
+  describe('on inserting rows', () => {
+
+    const row = {column: 'column'};
+
+    it('should insert one row', async () => {
+
+      const insertQuery = {
+        rows: [row],
+        type: query.types.INSERT
+      };
+
+      table.insert(row);
+
+      await table.save();
+
+      sinon.assert.calledOnce(query.run);
+      sinon.assert.calledWithExactly(query.run, [insertQuery], tableData);
+
+    });
+
+    it('should insert array of rows', async () => {
+
+      const insertQuery = {
+        rows: [row, row],
+        type: query.types.INSERT
+      };
+
+      table.insert(row, row);
+
+      await table.save();
+
+      sinon.assert.calledOnce(query.run);
+      sinon.assert.calledWithExactly(query.run, [insertQuery], tableData);
 
     });
 
