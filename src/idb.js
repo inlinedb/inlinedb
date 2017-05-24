@@ -38,9 +38,7 @@ class IDB {
 
     if (!this.tables[tableName]) {
 
-      this.tables[tableName] = {
-        lastInsertId: 0
-      };
+      this.tables[tableName] = {};
 
       this.save();
 

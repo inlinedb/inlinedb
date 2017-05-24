@@ -144,9 +144,7 @@ describe('IDB', () => {
       idb.createTable(tableName);
 
       expect(idb.tables).to.include(tableName);
-      expect(idb.tables[tableName]).to.equal({
-        lastInsertId: 0
-      });
+      expect(idb.tables[tableName]).to.be.empty().object();
 
       sinon.assert.calledOnce(file.saveIDB);
       sinon.assert.calledWithExactly(file.saveIDB, idbName, idb);
