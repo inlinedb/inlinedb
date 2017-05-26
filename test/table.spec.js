@@ -1,6 +1,7 @@
 const {Table} = require('../src/table');
 const {expect} = require('code');
 const file = require('../src/file');
+const filter = require('../src/filter');
 const query = require('../src/query');
 const sinon = require('sinon');
 
@@ -20,6 +21,7 @@ describe('Table', () => {
     table = new Table(idbName, tableName);
 
     sandbox.stub(file);
+    sandbox.stub(filter);
     sandbox.stub(query);
 
     file.loadTable.returns(Promise.resolve(tableData));
@@ -177,31 +179,18 @@ describe('Table', () => {
 
   describe('on querying rows', () => {
 
+    let filterFunction;
+
     beforeEach(() => {
 
       tableData = {
-        index: {
-          10: 0,
-          20: 2,
-          30: 1
-        },
-        rows: [
-          {
-            $idbID: 10,
-            column: 'column awesome'
-          },
-          {
-            $idbID: 30,
-            column: 'column match'
-          },
-          {
-            $idbID: 20,
-            column: 'column random'
-          }
-        ]
+        index: {},
+        rows: []
       };
+      filterFunction = sandbox.spy(() => Symbol.for('rows'));
 
       file.loadTable.returns(Promise.resolve(tableData));
+      filter.toFunction.returns(filterFunction);
 
     });
 
@@ -214,49 +203,32 @@ describe('Table', () => {
 
     });
 
-    it('should return all the rows when there is no filter', async () => {
+    it('should convert the filter to a function', async () => {
+
+      const criteria = 'filter';
+
+      await table.query(criteria);
+
+      sinon.assert.calledOnce(filter.toFunction);
+      sinon.assert.calledWithExactly(filter.toFunction, criteria);
+
+    });
+
+    it('should filter the data using the filter function', async () => {
+
+      await table.query();
+
+      sinon.assert.calledOnce(filterFunction);
+      sinon.assert.calledWithExactly(filterFunction, tableData);
+
+    });
+
+    it('should return the filtered data', async () => {
 
       const result = await table.query();
+      const expectedResult = Symbol.for('rows');
 
-      expect(result).to.equal(tableData.rows);
-
-    });
-
-    it('should return the rows satisfied by a filter function', async () => {
-
-      const filterFunction = row => row.column === 'column match';
-      const result = await table.query(filterFunction);
-      const expectedRows = [
-        tableData.rows[1]
-      ];
-
-      expect(result).to.equal(expectedRows);
-
-    });
-
-    it('should return the row with matching id', async () => {
-
-      const id = 10;
-      const result = await table.query(id);
-      const expectedRows = [
-        tableData.rows[0]
-      ];
-
-      expect(result).to.equal(expectedRows);
-
-    });
-
-    it('should return the rows with matching ids', async () => {
-
-      const id1 = 10;
-      const id2 = 20;
-      const result = await table.query([id1, id2]);
-      const expectedRows = [
-        tableData.rows[0],
-        tableData.rows[2]
-      ];
-
-      expect(result).to.equal(expectedRows);
+      expect(result).to.equal(expectedResult);
 
     });
 
