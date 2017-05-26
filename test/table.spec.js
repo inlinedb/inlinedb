@@ -183,10 +183,6 @@ describe('Table', () => {
 
     beforeEach(() => {
 
-      tableData = {
-        index: {},
-        rows: []
-      };
       filterFunction = sandbox.spy(() => Symbol.for('rows'));
 
       file.loadTable.returns(Promise.resolve(tableData));
@@ -229,6 +225,47 @@ describe('Table', () => {
       const expectedResult = Symbol.for('rows');
 
       expect(result).to.equal(expectedResult);
+
+    });
+
+  });
+
+  describe('on updating rows', () => {
+
+    let criteria,
+      updateQuery;
+
+    beforeEach(async () => {
+
+      const filterFunction = Symbol.for('filterFunction');
+      const updateFunction = Symbol.for('updateFunction');
+
+      criteria = 'filter';
+      updateQuery = {
+        filter: filterFunction,
+        type: query.types.UPDATE,
+        update: updateFunction
+      };
+
+      filter.toFunction.returns(filterFunction);
+
+      table.update(updateFunction, criteria);
+
+      await table.save();
+
+    });
+
+    it('should convert the filter to a function', () => {
+
+      sinon.assert.calledOnce(filter.toFunction);
+      sinon.assert.calledWithExactly(filter.toFunction, criteria);
+
+    });
+
+    it('should update the rows', () => {
+
+      sinon.assert.calledOnce(query.run);
+      sinon.assert.calledWithExactly(query.run, [updateQuery], tableData);
 
     });
 

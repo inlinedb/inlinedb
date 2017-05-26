@@ -52,6 +52,16 @@ class Table {
 
   }
 
+  update(update, criteria) {
+
+    tableQueries.get(this).push({
+      filter: filter.toFunction(criteria),
+      type: query.types.UPDATE,
+      update
+    });
+
+  }
+
 }
 
 module.exports = {
