@@ -1,25 +1,28 @@
-const toFunction = (filter = () => true) => {
+const mapFunctions = (criteria, functionHandler, otherHandler) => {
 
-  let func;
+  let handler = otherHandler;
 
-  if (typeof filter === 'function') {
+  if (typeof criteria === 'function') {
 
-    func = data =>
-      data.rows.filter(filter);
-
-  } else {
-
-    func = data =>
-      [].concat(filter).map($idbID =>
-        data.rows[data.index[$idbID]]
-      );
+    handler = functionHandler;
 
   }
 
-  return func;
+  return handler;
 
 };
 
+const toFunction = (filter = () => true) => mapFunctions(
+  filter,
+  data =>
+    data.rows.filter(filter),
+  data =>
+    [].concat(filter).map($idbID =>
+      data.rows[data.index[$idbID]]
+    )
+);
+
 module.exports = {
+  mapFunctions,
   toFunction
 };

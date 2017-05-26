@@ -85,4 +85,27 @@ describe('filter', () => {
 
   });
 
+  describe('when mapping functions by criteria type', () => {
+
+    const functionHandler = Symbol('functionHandler');
+    const otherHandler = Symbol('otherHandler');
+
+    it('should return function handler if criteria is a function', () => {
+
+      const criteria = new Function();
+
+      expect(filter.mapFunctions(criteria, functionHandler, otherHandler)).to.equal(functionHandler);
+
+    });
+
+    it('should return other handler if criteria is not a function', () => {
+
+      const criteria = 'id';
+
+      expect(filter.mapFunctions(criteria, functionHandler, otherHandler)).to.equal(otherHandler);
+
+    });
+
+  });
+
 });
