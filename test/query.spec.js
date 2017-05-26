@@ -64,6 +64,14 @@ describe('query', () => {
 
     });
 
+    it('should update the last insert id', () => {
+
+      const expectedId = 1;
+
+      expect(updatedData.lastInsertId).to.equal(expectedId);
+
+    });
+
     describe('and more rows', () => {
 
       const insertMoreQuery = {
@@ -95,6 +103,14 @@ describe('query', () => {
         };
 
         expect(updatedData.index).to.equal(expectedIndex);
+
+      });
+
+      it('should update the last insert id', () => {
+
+        const expectedId = 3;
+
+        expect(updatedData.lastInsertId).to.equal(expectedId);
 
       });
 
