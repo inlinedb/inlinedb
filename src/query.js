@@ -27,6 +27,18 @@ const insertRows = (data, query) => {
 
 };
 
+const updateRows = (data, query) => {
+
+  data.rows
+    .filter(query.filter)
+    .map(row =>
+      Object.assign(row, query.update(row))
+    );
+
+  return data;
+
+};
+
 const types = {
   DELETE: 'DELETE',
   INSERT: 'INSERT',
@@ -34,7 +46,8 @@ const types = {
 };
 
 const queryHandlers = {
-  [types.INSERT]: insertRows
+  [types.INSERT]: insertRows,
+  [types.UPDATE]: updateRows
 };
 
 const run = (queries, data) => queries.reduce(
