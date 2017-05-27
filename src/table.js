@@ -15,6 +15,23 @@ class Table {
 
   }
 
+  delete(criteria = () => true) {
+
+    tableQueries.get(this)
+      .push(filter.map(
+        criteria,
+        {
+          shouldDelete: criteria,
+          type: query.types.DELETE_BY_FILTER
+        },
+        {
+          ids: [].concat(criteria),
+          type: query.types.DELETE_BY_IDS
+        }
+      ));
+
+  }
+
   insert(...rows) {
 
     tableQueries.get(this).push({

@@ -317,7 +317,7 @@ describe('Table', () => {
             update: updateFunction
           },
           {
-            ids: [].concat(filterFunction),
+            ids: [filterFunction],
             type: query.types.UPDATE_BY_IDS,
             update: updateFunction
           }
@@ -343,6 +343,91 @@ describe('Table', () => {
 
         sinon.assert.calledOnce(query.run);
         sinon.assert.calledWithExactly(query.run, [updateQuery], tableData);
+
+      });
+
+    });
+
+  });
+
+  describe('on deleting rows', () => {
+
+    const filterFunction = Symbol.for('filterFunction');
+
+    beforeEach(() => filter.map.returnsArg(2));
+
+    describe('when there is no criteria', () => {
+
+      beforeEach(() => table.delete());
+
+      it('should map the default criteria to a query', () => {
+
+        const criteria = sinon.match.func;
+
+        sinon.assert.calledOnce(filter.map);
+        sinon.assert.calledWithExactly(filter.map, criteria,
+          {
+            shouldDelete: criteria,
+            type: query.types.DELETE_BY_FILTER
+          },
+          {
+            ids: [].concat(criteria),
+            type: query.types.DELETE_BY_IDS
+          }
+        );
+
+      });
+
+      it('should return true by default for filtering', () => {
+
+        const call = filter.map.getCall(0);
+
+        expect(call.args[1].shouldDelete()).to.be.true();
+
+        expect(call.args[2].ids).to.have.length(1);
+        expect(call.args[2].ids[0]()).to.be.true();
+
+      });
+
+    });
+
+    describe('when there is a criteria', () => {
+
+      beforeEach(() => table.delete(filterFunction));
+
+      it('should map the default criteria to a query', () => {
+
+        sinon.assert.calledOnce(filter.map);
+        sinon.assert.calledWithExactly(filter.map, filterFunction,
+          {
+            shouldDelete: filterFunction,
+            type: query.types.DELETE_BY_FILTER
+          },
+          {
+            ids: [filterFunction],
+            type: query.types.DELETE_BY_IDS
+          }
+        );
+
+      });
+
+    });
+
+    describe('after mapping criteria', () => {
+
+      beforeEach(() => table.delete(filterFunction));
+
+      it('should queue the resulting query', async () => {
+
+        const deleteQuery = {
+          ids: [filterFunction],
+          type: query.types.DELETE_BY_IDS
+        };
+
+        await table.save();
+
+        sinon.assert.calledOnce(query.run);
+        sinon.assert.calledWithExactly(query.run, [deleteQuery], tableData);
 
       });
 
