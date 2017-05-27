@@ -126,7 +126,7 @@ describe('query', () => {
     const updateFunction = row => Object.assign({}, row, {
       column: row.column * 2
     });
-    const filterFunction = row => row.$idbID > 1;
+    const filterFunction = data => data.rows.filter(row => row.$idbID > 1);
     const updateQuery = {
       filter: filterFunction,
       type: query.types.UPDATE,
