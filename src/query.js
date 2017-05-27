@@ -1,3 +1,41 @@
+const buildIndex = rows => rows.reduce(
+  (indices, row, iterator) =>
+    Object.assign(indices, {[row.$idbID]: iterator}),
+  {}
+);
+
+const deleteRowsByFilter = (data, query) => {
+
+  const rows = data.rows
+    .filter(row => !query.shouldDelete(row));
+
+  const index = buildIndex(rows);
+
+  return Object.assign({}, data, {
+    index,
+    rows
+  });
+
+};
+
+const deleteRowsByIds = (data, query) => {
+
+  const rows = data.rows.slice();
+  const indices = query.ids
+    .map($$idbId => data.index[$$idbId])
+    .sort((a, b) => b - a);
+
+  indices.forEach(index => rows.splice(index, 1));
+
+  const index = buildIndex(rows);
+
+  return Object.assign({}, data, {
+    index,
+    rows
+  });
+
+};
+
 const getNextId = lastInsertId => lastInsertId + 1;
 
 const insertRows = (data, query) => {
@@ -13,11 +51,7 @@ const insertRows = (data, query) => {
 
     })
   );
-  const index = rows.reduce(
-    (indices, row, iterator) =>
-      Object.assign(indices, {[row.$idbID]: iterator}),
-    {}
-  );
+  const index = buildIndex(rows);
 
   return {
     index,
@@ -58,13 +92,16 @@ const updateRowsByIds = (data, query) => {
 };
 
 const types = {
-  DELETE: Symbol.for('DELETE'),
+  DELETE_BY_FILTER: Symbol.for('DELETE_BY_FILTER'),
+  DELETE_BY_IDS: Symbol.for('DELETE_BY_IDS'),
   INSERT: Symbol.for('INSERT'),
   UPDATE_BY_FILTER: Symbol.for('UPDATE_BY_FILTER'),
   UPDATE_BY_IDS: Symbol.for('UPDATE_BY_IDS')
 };
 
 const queryHandlers = {
+  [types.DELETE_BY_FILTER]: deleteRowsByFilter,
+  [types.DELETE_BY_IDS]: deleteRowsByIds,
   [types.INSERT]: insertRows,
   [types.UPDATE_BY_FILTER]: updateRowsByFilter,
   [types.UPDATE_BY_IDS]: updateRowsByIds
