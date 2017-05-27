@@ -85,7 +85,7 @@ describe('filter', () => {
 
   });
 
-  describe('when mapping functions by criteria type', () => {
+  describe('when mapping handlers by criteria type', () => {
 
     const functionHandler = Symbol('functionHandler');
     const otherHandler = Symbol('otherHandler');
@@ -94,7 +94,7 @@ describe('filter', () => {
 
       const criteria = new Function();
 
-      expect(filter.mapFunctions(criteria, functionHandler, otherHandler)).to.equal(functionHandler);
+      expect(filter.map(criteria, functionHandler, otherHandler)).to.equal(functionHandler);
 
     });
 
@@ -102,7 +102,7 @@ describe('filter', () => {
 
       const criteria = 'id';
 
-      expect(filter.mapFunctions(criteria, functionHandler, otherHandler)).to.equal(otherHandler);
+      expect(filter.map(criteria, functionHandler, otherHandler)).to.equal(otherHandler);
 
     });
 

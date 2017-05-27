@@ -261,40 +261,90 @@ describe('Table', () => {
 
   describe('on updating rows', () => {
 
-    let criteria,
-      updateQuery;
+    const filterFunction = Symbol.for('filterFunction');
+    const updateFunction = Symbol.for('updateFunction');
 
-    beforeEach(async () => {
+    beforeEach(() => filter.map.returnsArg(1));
 
-      const filterFunction = Symbol.for('filterFunction');
-      const updateFunction = Symbol.for('updateFunction');
+    describe('when there is no criteria', () => {
 
-      criteria = 'filter';
-      updateQuery = {
-        filter: filterFunction,
-        type: query.types.UPDATE,
-        update: updateFunction
-      };
+      beforeEach(() => table.update(updateFunction));
 
-      filter.toFunction.returns(filterFunction);
+      it('should map the default criteria to a query', () => {
 
-      table.update(updateFunction, criteria);
+        const criteria = sinon.match.func;
 
-      await table.save();
+        sinon.assert.calledOnce(filter.map);
+        sinon.assert.calledWithExactly(filter.map, criteria,
+          {
+            shouldUpdate: criteria,
+            type: query.types.UPDATE_BY_FILTER,
+            update: updateFunction
+          },
+          {
+            ids: [].concat(criteria),
+            type: query.types.UPDATE_BY_IDS,
+            update: updateFunction
+          }
+        );
+
+      });
+
+      it('should return true by default for filtering', () => {
+
+        const call = filter.map.getCall(0);
+
+        expect(call.args[1].shouldUpdate()).to.be.true();
+
+        expect(call.args[2].ids).to.have.length(1);
+        expect(call.args[2].ids[0]()).to.be.true();
+
+      });
 
     });
 
-    it('should convert the filter to a function', () => {
+    describe('when there is a criteria', () => {
 
-      sinon.assert.calledOnce(filter.toFunction);
-      sinon.assert.calledWithExactly(filter.toFunction, criteria);
+      beforeEach(() => table.update(updateFunction, filterFunction));
+
+      it('should map the default criteria to a query', () => {
+
+        sinon.assert.calledOnce(filter.map);
+        sinon.assert.calledWithExactly(filter.map, filterFunction,
+          {
+            shouldUpdate: filterFunction,
+            type: query.types.UPDATE_BY_FILTER,
+            update: updateFunction
+          },
+          {
+            ids: [].concat(filterFunction),
+            type: query.types.UPDATE_BY_IDS,
+            update: updateFunction
+          }
+        );
+
+      });
 
     });
 
-    it('should update the rows', () => {
+    describe('after mapping criteria', () => {
 
-      sinon.assert.calledOnce(query.run);
-      sinon.assert.calledWithExactly(query.run, [updateQuery], tableData);
+      beforeEach(() => table.update(updateFunction, filterFunction));
+
+      it('should queue the resulting query', async () => {
+
+        const updateQuery = {
+          shouldUpdate: filterFunction,
+          type: query.types.UPDATE_BY_FILTER,
+          update: updateFunction
+        };
+
+        await table.save();
+
+        sinon.assert.calledOnce(query.run);
+        sinon.assert.calledWithExactly(query.run, [updateQuery], tableData);
+
+      });
 
     });
 

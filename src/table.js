@@ -59,13 +59,22 @@ class Table {
 
   }
 
-  update(update, criteria) {
+  update(update, criteria = () => true) {
 
-    tableQueries.get(this).push({
-      filter: filter.toFunction(criteria),
-      type: query.types.UPDATE,
-      update
-    });
+    tableQueries.get(this)
+      .push(filter.map(
+        criteria,
+        {
+          shouldUpdate: criteria,
+          type: query.types.UPDATE_BY_FILTER,
+          update
+        },
+        {
+          ids: [].concat(criteria),
+          type: query.types.UPDATE_BY_IDS,
+          update
+        }
+      ));
 
   }
 

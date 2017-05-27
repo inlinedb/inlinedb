@@ -1,4 +1,4 @@
-const mapFunctions = (criteria, functionHandler, otherHandler) => {
+const map = (criteria, functionHandler, otherHandler) => {
 
   let handler = otherHandler;
 
@@ -12,7 +12,7 @@ const mapFunctions = (criteria, functionHandler, otherHandler) => {
 
 };
 
-const toFunction = (filter = () => true) => mapFunctions(
+const toFunction = (filter = () => true) => map(
   filter,
   data =>
     data.rows.filter(filter),
@@ -23,6 +23,6 @@ const toFunction = (filter = () => true) => mapFunctions(
 );
 
 module.exports = {
-  mapFunctions,
+  map,
   toFunction
 };

@@ -6,9 +6,10 @@ describe('query', () => {
   it('should have query types', () => {
 
     expect(query.types).to.equal({
-      DELETE: 'DELETE',
-      INSERT: 'INSERT',
-      UPDATE: 'UPDATE'
+      DELETE: Symbol.for('DELETE'),
+      INSERT: Symbol.for('INSERT'),
+      UPDATE_BY_FILTER: Symbol.for('UPDATE_BY_FILTER'),
+      UPDATE_BY_IDS: Symbol.for('UPDATE_BY_IDS')
     });
 
   });
@@ -123,83 +124,166 @@ describe('query', () => {
     let tableData,
       updatedData;
 
-    const updateFunction = row => Object.assign({}, row, {
-      column: row.column * 2
-    });
-    const filterFunction = data => data.rows.filter(row => row.$idbID > 1);
-    const updateQuery = {
-      filter: filterFunction,
-      type: query.types.UPDATE,
-      update: updateFunction
-    };
+    const updateFunction = row => ({column: row.column * 2});
 
-    before(() => {
+    describe('by ids', () => {
 
-      tableData = {
-        index: {
+      const updateQuery = {
+        ids: [1, 2],
+        type: query.types.UPDATE_BY_IDS,
+        update: updateFunction
+      };
+
+      before(() => {
+
+        tableData = {
+          index: {
+            1: 0,
+            2: 1,
+            3: 2
+          },
+          lastInsertId: 3,
+          rows: [
+            {
+              $idbID: 1,
+              column: 3
+            },
+            {
+              $idbID: 2,
+              column: 4
+            },
+            {
+              $idbID: 3,
+              column: 5
+            }
+          ]
+        };
+
+        updatedData = query.run([updateQuery], tableData);
+
+      });
+
+      it('should return the updated rows', () => {
+
+        const expectedRows = [
+          {
+            $idbID: 1,
+            column: 6
+          },
+          {
+            $idbID: 2,
+            column: 8
+          },
+          {
+            $idbID: 3,
+            column: 5
+          }
+        ];
+
+        expect(updatedData.rows).to.equal(expectedRows);
+
+      });
+
+      it('should not update the last insert id', () => {
+
+        const expectedId = 3;
+
+        expect(updatedData.lastInsertId).to.equal(expectedId);
+
+      });
+
+      it('should not update the index', () => {
+
+        const expectedIndex = {
           1: 0,
           2: 1,
           3: 2
-        },
-        lastInsertId: 3,
-        rows: [
+        };
+
+        expect(updatedData.index).to.equal(expectedIndex);
+
+      });
+
+    });
+
+    describe('by filter', () => {
+
+      const filterFunction = row => row.$idbID > 1;
+      const updateQuery = {
+        shouldUpdate: filterFunction,
+        type: query.types.UPDATE_BY_FILTER,
+        update: updateFunction
+      };
+
+      before(() => {
+
+        tableData = {
+          index: {
+            1: 0,
+            2: 1,
+            3: 2
+          },
+          lastInsertId: 3,
+          rows: [
+            {
+              $idbID: 1,
+              column: 3
+            },
+            {
+              $idbID: 2,
+              column: 4
+            },
+            {
+              $idbID: 3,
+              column: 5
+            }
+          ]
+        };
+
+        updatedData = query.run([updateQuery], tableData);
+
+      });
+
+      it('should return the updated rows', () => {
+
+        const expectedRows = [
           {
             $idbID: 1,
             column: 3
           },
           {
             $idbID: 2,
-            column: 4
+            column: 8
           },
           {
             $idbID: 3,
-            column: 5
+            column: 10
           }
-        ]
-      };
+        ];
 
-      updatedData = query.run([updateQuery], tableData);
+        expect(updatedData.rows).to.equal(expectedRows);
 
-    });
+      });
 
-    it('should return the updated rows', () => {
+      it('should not update the last insert id', () => {
 
-      const expectedRows = [
-        {
-          $idbID: 1,
-          column: 3
-        },
-        {
-          $idbID: 2,
-          column: 8
-        },
-        {
-          $idbID: 3,
-          column: 10
-        }
-      ];
+        const expectedId = 3;
 
-      expect(updatedData.rows).to.equal(expectedRows);
+        expect(updatedData.lastInsertId).to.equal(expectedId);
 
-    });
+      });
 
-    it('should not update the last insert id', () => {
+      it('should not update the index', () => {
 
-      const expectedId = 3;
+        const expectedIndex = {
+          1: 0,
+          2: 1,
+          3: 2
+        };
 
-      expect(updatedData.lastInsertId).to.equal(expectedId);
+        expect(updatedData.index).to.equal(expectedIndex);
 
-    });
-
-    it('should not update the index', () => {
-
-      const expectedIndex = {
-        1: 0,
-        2: 1,
-        3: 2
-      };
-
-      expect(updatedData.index).to.equal(expectedIndex);
+      });
 
     });
 

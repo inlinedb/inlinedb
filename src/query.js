@@ -27,26 +27,47 @@ const insertRows = (data, query) => {
 
 };
 
-const updateRows = (data, query) => {
+const updateRowsByFilter = (data, query) => {
 
-  query.filter(data)
+  const rows = data.rows
     .map(row =>
-      Object.assign(row, query.update(row))
+      query.shouldUpdate(row) ?
+        Object.assign(row, query.update(row)) :
+        row
     );
 
-  return data;
+  return Object.assign({}, data, {rows});
+
+};
+
+const updateRowsByIds = (data, query) => {
+
+  const rows = data.rows.slice();
+
+  query.ids.forEach($idbID => {
+
+    const index = data.index[$idbID];
+    const row = rows[index];
+
+    rows[index] = Object.assign(row, query.update(row));
+
+  });
+
+  return Object.assign({}, data, {rows});
 
 };
 
 const types = {
-  DELETE: 'DELETE',
-  INSERT: 'INSERT',
-  UPDATE: 'UPDATE'
+  DELETE: Symbol.for('DELETE'),
+  INSERT: Symbol.for('INSERT'),
+  UPDATE_BY_FILTER: Symbol.for('UPDATE_BY_FILTER'),
+  UPDATE_BY_IDS: Symbol.for('UPDATE_BY_IDS')
 };
 
 const queryHandlers = {
   [types.INSERT]: insertRows,
-  [types.UPDATE]: updateRows
+  [types.UPDATE_BY_FILTER]: updateRowsByFilter,
+  [types.UPDATE_BY_IDS]: updateRowsByIds
 };
 
 const run = (queries, data) => queries.reduce(
