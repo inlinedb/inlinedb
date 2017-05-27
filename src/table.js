@@ -44,6 +44,13 @@ class Table {
         data => query.run(tableQueries.get(this), data),
         () => query.run(tableQueries.get(this), emptyData)
       )
+      .then(updatedData => {
+
+        tableQueries.set(this, []);
+
+        return updatedData;
+
+      })
       .then(updatedData => file.saveTable(
         this.idbName,
         this.tableName,

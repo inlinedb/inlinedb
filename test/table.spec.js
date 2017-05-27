@@ -137,6 +137,35 @@ describe('Table', () => {
 
     });
 
+    describe('after saving the table', () => {
+
+      const row = {column: 'column'};
+      const insertQuery = {
+        rows: [row],
+        type: query.types.INSERT
+      };
+
+      it('should clear the queries', async () => {
+
+        const queries = [insertQuery];
+
+        table.insert(row);
+
+        await table.save();
+
+        sinon.assert.calledOnce(query.run);
+        sinon.assert.calledWithExactly(query.run, queries, tableData);
+
+        query.run.reset();
+        await table.save();
+
+        sinon.assert.calledOnce(query.run);
+        sinon.assert.calledWithExactly(query.run, [], tableData);
+
+      });
+
+    });
+
   });
 
   describe('on inserting rows', () => {
