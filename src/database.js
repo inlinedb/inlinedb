@@ -1,5 +1,6 @@
 const idb = require('./idb');
 const table = require('./table');
+const file = require('./file');
 
 class Database {
 
@@ -14,6 +15,14 @@ class Database {
     this.idbConfig.createTable(tableName);
 
     return new table.Table(this.idbConfig.idbName, tableName);
+
+  }
+
+  dropTable(tableName) {
+
+    this.idbConfig.dropTable(tableName);
+
+    file.deleteTable(this.idbConfig.idbName, tableName);
 
   }
 

@@ -2,6 +2,7 @@ const {Database} = require('../src/database');
 const IDB = require('../src/idb');
 const Table = require('../src/table');
 const {expect} = require('code');
+const file = require('../src/file');
 const sinon = require('sinon');
 
 describe('Database', () => {
@@ -19,6 +20,7 @@ describe('Database', () => {
 
     idbConfig = {
       createTable: sandbox.stub(),
+      dropTable: sandbox.stub(),
       idbName
     };
 
@@ -26,6 +28,7 @@ describe('Database', () => {
 
     sandbox.stub(IDB, 'IDB').returns(idbConfig);
     sandbox.stub(Table, 'Table').returns(table);
+    sandbox.stub(file);
 
     database = new Database(idbName);
 
@@ -73,6 +76,26 @@ describe('Database', () => {
 
       sinon.assert.calledOnce(idbConfig.createTable);
       sinon.assert.calledWithExactly(idbConfig.createTable, tableName);
+
+    });
+
+  });
+
+  describe('when dropping a table', () => {
+
+    beforeEach(() => database.dropTable(tableName));
+
+    it('should remove the table from idb config', () => {
+
+      sinon.assert.calledOnce(idbConfig.dropTable);
+      sinon.assert.calledWithExactly(idbConfig.dropTable, tableName);
+
+    });
+
+    it('should delete the table file', () => {
+
+      sinon.assert.calledOnce(file.deleteTable);
+      sinon.assert.calledWithExactly(file.deleteTable, idbName, tableName);
 
     });
 
