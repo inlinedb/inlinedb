@@ -48,6 +48,12 @@ class Table {
 
   }
 
+  revert() {
+
+    tableQueries.set(this, []);
+
+  }
+
   save() {
 
     const emptyData = {

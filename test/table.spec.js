@@ -435,4 +435,29 @@ describe('Table', () => {
 
   });
 
+  describe('on reverting queries', () => {
+
+    it('should not remove the queued queries', async () => {
+
+      table.insert(
+        {column: 'column insert 1'},
+        {column: 'column insert 2'}
+      );
+      table.update(
+        () => ({column: 'column update'}),
+        row => /insert 1$/.test(row)
+      );
+      table.delete(row => /insert 2$/.test(row));
+
+      table.revert();
+
+      await table.save();
+
+      sinon.assert.calledOnce(query.run);
+      sinon.assert.calledWithExactly(query.run, [], tableData);
+
+    });
+
+  });
+
 });
