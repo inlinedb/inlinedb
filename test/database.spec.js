@@ -21,7 +21,11 @@ describe('Database', () => {
     idbConfig = {
       createTable: sandbox.stub(),
       dropTable: sandbox.stub(),
-      idbName
+      idbName,
+      tables: {
+        'table-1': {},
+        'table-2': {}
+      }
     };
 
     table = {};
@@ -109,6 +113,21 @@ describe('Database', () => {
 
       sinon.assert.calledOnce(file.deleteDatabase);
       sinon.assert.calledWithExactly(file.deleteDatabase, idbName);
+
+    });
+
+  });
+
+  describe('when listing tables', () => {
+
+    it('should return the list of tables in the idb', () => {
+
+      const expectedTables = [
+        'table-1',
+        'table-2'
+      ];
+
+      expect(database.listTables()).to.equal(expectedTables);
 
     });
 

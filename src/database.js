@@ -32,6 +32,12 @@ class Database {
 
   }
 
+  listTables() {
+
+    return Object.keys(this.idbConfig.tables);
+
+  }
+
 }
 
 module.exports = {
