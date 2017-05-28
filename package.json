@@ -9,7 +9,7 @@
     "url": "https://github.com/inlinedb/inlinedb/issues"
   },
   "engines": {
-    "node": ">=7"
+    "node": ">=6"
   },
   "homepage": "https://github.com/inlinedb/inlinedb#readme",
   "devDependencies": {
