@@ -31,6 +31,9 @@ const fileExists = location => {
 
 };
 
+const deleteDatabase = idbName =>
+  rimraf.sync(`./${idbName}`);
+
 const deleteTable = (idbName, tableName) =>
   rimraf.sync(getTableLocation(idbName, tableName));
 
@@ -66,6 +69,7 @@ const saveTable = (idbName, tableName, tableData) =>
   );
 
 module.exports = {
+  deleteDatabase,
   deleteTable,
   doesIDBExist,
   loadIDB,

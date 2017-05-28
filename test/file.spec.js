@@ -259,4 +259,21 @@ describe('file', () => {
 
   });
 
+  describe('when deleting a database', () => {
+
+    const location = `./${idbName}`;
+
+    it('should remove the database from system', () => {
+
+      sandbox.stub(rimraf, 'sync');
+
+      file.deleteDatabase(idbName, tableName);
+
+      sinon.assert.calledOnce(rimraf.sync);
+      sinon.assert.calledWithExactly(rimraf.sync, location);
+
+    });
+
+  });
+
 });

@@ -18,6 +18,12 @@ class Database {
 
   }
 
+  drop() {
+
+    file.deleteDatabase(this.idbConfig.idbName);
+
+  }
+
   dropTable(tableName) {
 
     this.idbConfig.dropTable(tableName);

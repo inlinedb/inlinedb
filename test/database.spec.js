@@ -101,4 +101,17 @@ describe('Database', () => {
 
   });
 
+  describe('when dropping the database', () => {
+
+    it('should delete the database', () => {
+
+      database.drop();
+
+      sinon.assert.calledOnce(file.deleteDatabase);
+      sinon.assert.calledWithExactly(file.deleteDatabase, idbName);
+
+    });
+
+  });
+
 });
