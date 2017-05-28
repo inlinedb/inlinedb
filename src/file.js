@@ -1,4 +1,5 @@
 const fs = require('fs');
+const rimraf = require('rimraf');
 
 const getIDBLocation = idbName => `./${idbName}/.idb`;
 const getTableLocation = (idbName, tableName) => `./${idbName}/${tableName}.table`;
@@ -30,6 +31,12 @@ const fileExists = location => {
 
 };
 
+const deleteTable = (idbName, tableName) =>
+  rimraf.sync(getTableLocation(idbName, tableName));
+
+const doesIDBExist = idbName =>
+  fileExists(getIDBLocation(idbName));
+
 const loadIDB = idbName => {
 
   const location = getIDBLocation(idbName);
@@ -38,6 +45,14 @@ const loadIDB = idbName => {
   return JSON.parse(data);
 
 };
+
+const loadTable = (idbName, tableName) =>
+  new Promise((resolve, reject) =>
+    fs.readFile(
+      getTableLocation(idbName, tableName),
+      fileAsyncHandler(resolve, reject)
+    ))
+    .then(data => JSON.parse(data.toString()));
 
 const saveIDB = (idbName, idbConfig) => fs.writeFileSync(getIDBLocation(idbName), JSON.stringify(idbConfig));
 
@@ -50,18 +65,8 @@ const saveTable = (idbName, tableName, tableData) =>
     )
   );
 
-const loadTable = (idbName, tableName) =>
-  new Promise((resolve, reject) =>
-    fs.readFile(
-      getTableLocation(idbName, tableName),
-      fileAsyncHandler(resolve, reject)
-    ))
-    .then(data => JSON.parse(data.toString()));
-
-const doesIDBExist = idbName =>
-  fileExists(getIDBLocation(idbName));
-
 module.exports = {
+  deleteTable,
   doesIDBExist,
   loadIDB,
   loadTable,

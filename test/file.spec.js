@@ -1,6 +1,7 @@
 const {expect} = require('code');
 const file = require('../src/file');
 const fs = require('fs');
+const rimraf = require('rimraf');
 const sinon = require('sinon');
 
 describe('file', () => {
@@ -236,6 +237,23 @@ describe('file', () => {
         expect(err).to.equal(fileError);
 
       }
+
+    });
+
+  });
+
+  describe('when deleting a table', () => {
+
+    const location = `./${idbName}/${tableName}.table`;
+
+    it('should remove the table from system', () => {
+
+      sandbox.stub(rimraf, 'sync');
+
+      file.deleteTable(idbName, tableName);
+
+      sinon.assert.calledOnce(rimraf.sync);
+      sinon.assert.calledWithExactly(rimraf.sync, location);
 
     });
 
