@@ -86,7 +86,11 @@ const updateRowsByIds = (data, query) => {
     const index = data.index[$idbID];
     const row = rows[index];
 
-    rows[index] = Object.assign(row, query.update(row));
+    if (row) {
+
+      rows[index] = Object.assign(row, query.update(row));
+
+    }
 
   });
 

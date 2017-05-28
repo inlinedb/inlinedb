@@ -205,6 +205,22 @@ describe('query', () => {
 
       });
 
+      describe('when id is not there in table', () => {
+
+        it('should not update any', () => {
+
+          const id = 5;
+
+          updateQuery.ids = [id];
+
+          updatedData = query.run([updateQuery], tableData);
+
+          expect(updatedData).to.equal(tableData);
+
+        });
+
+      });
+
     });
 
     describe('by filter', () => {
