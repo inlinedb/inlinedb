@@ -1,3 +1,5 @@
+const isNumeric = n => !isNaN(parseFloat(n)) && isFinite(n);
+
 const buildIndex = rows => rows.reduce(
   (indices, row, iterator) =>
     Object.assign(indices, {[row.$idbID]: iterator}),
@@ -22,8 +24,9 @@ const deleteRowsByIds = (data, query) => {
 
   const rows = data.rows.slice();
   const indices = query.ids
-    .map($$idbId => data.index[$$idbId])
-    .sort((a, b) => b - a);
+    .map($idbID => data.index[$idbID])
+    .sort((a, b) => b - a)
+    .filter($idbID => isNumeric($idbID));
 
   indices.forEach(index => rows.splice(index, 1));
 

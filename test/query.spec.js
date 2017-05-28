@@ -362,6 +362,22 @@ describe('query', () => {
 
       });
 
+      describe('when id is not there in table', () => {
+
+        it('should not delete any', () => {
+
+          const id = 5;
+
+          deleteQuery.ids = [id];
+
+          updatedData = query.run([deleteQuery], tableData);
+
+          expect(updatedData).to.equal(tableData);
+
+        });
+
+      });
+
     });
 
     describe('by filter', () => {
