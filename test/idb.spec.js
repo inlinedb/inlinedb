@@ -7,6 +7,7 @@ const sinon = require('sinon');
 describe('IDB', () => {
 
   const idbName = 'db-name';
+  const tableName = 'table-name';
   let idb,
     sandbox;
 
@@ -117,8 +118,6 @@ describe('IDB', () => {
 
   describe('on creating a table', () => {
 
-    const tableName = 'table-name';
-
     beforeEach(() => {
 
       idb = new IDB(idbName);
@@ -145,6 +144,23 @@ describe('IDB', () => {
 
       expect(idb.tables).to.include(tableName);
       expect(idb.tables[tableName]).to.be.empty().object();
+
+      sinon.assert.calledOnce(file.saveIDB);
+      sinon.assert.calledWithExactly(file.saveIDB, idbName, idb);
+
+    });
+
+  });
+
+  describe('on dropping a table', () => {
+
+    it('should remove the table and save idb', () => {
+
+      expect(idb.tables).to.include(tableName);
+
+      idb.dropTable(tableName);
+
+      expect(idb.tables).to.not.include(tableName);
 
       sinon.assert.calledOnce(file.saveIDB);
       sinon.assert.calledWithExactly(file.saveIDB, idbName, idb);

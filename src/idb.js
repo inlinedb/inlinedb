@@ -12,6 +12,26 @@ class IDB {
 
   }
 
+  createTable(tableName) {
+
+    if (!this.tables[tableName]) {
+
+      this.tables[tableName] = {};
+
+      this.save();
+
+    }
+
+  }
+
+  dropTable(tableName) {
+
+    delete this.tables[tableName];
+
+    this.save();
+
+  }
+
   loadConfig(idbName) {
 
     if (file.doesIDBExist(idbName)) {
@@ -31,18 +51,6 @@ class IDB {
   save() {
 
     file.saveIDB(this.idbName, this);
-
-  }
-
-  createTable(tableName) {
-
-    if (!this.tables[tableName]) {
-
-      this.tables[tableName] = {};
-
-      this.save();
-
-    }
 
   }
 
