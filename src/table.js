@@ -1,6 +1,8 @@
+const assert = require('assert');
 const file = require('./file');
 const query = require('./query');
 const filter = require('./filter.js');
+const validation = require('./validation.js');
 
 const tableQueries = new WeakMap();
 
@@ -33,6 +35,9 @@ class Table {
   }
 
   insert(...rows) {
+
+    assert(rows.length > 0, validation.errors.rowsRequired(rows.length));
+    rows.forEach(validation.test.toBeAnObject);
 
     tableQueries.get(this).push({
       rows,
@@ -83,6 +88,11 @@ class Table {
   }
 
   update(update, criteria = () => true) {
+
+    assert.equal(typeof update, 'function', validation.errors.updateShouldBeAFunction(update));
+
+    validation.test.toNotMutateRows(update);
+    validation.test.toReturnAnObject(update);
 
     tableQueries.get(this)
       .push(filter.map(

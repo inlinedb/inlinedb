@@ -4,6 +4,7 @@ const file = require('../src/file');
 const filter = require('../src/filter');
 const query = require('../src/query');
 const sinon = require('sinon');
+const validation = require('../src/validation');
 
 describe('Table', () => {
 
@@ -23,6 +24,7 @@ describe('Table', () => {
     sandbox.stub(file);
     sandbox.stub(filter);
     sandbox.stub(query);
+    sandbox.stub(validation.test);
 
     file.loadTable.returns(Promise.resolve(tableData));
 
@@ -262,7 +264,7 @@ describe('Table', () => {
   describe('on updating rows', () => {
 
     const filterFunction = Symbol.for('filterFunction');
-    const updateFunction = Symbol.for('updateFunction');
+    const updateFunction = () => ({column: 'filter'});
 
     beforeEach(() => filter.map.returnsArg(1));
 
@@ -455,6 +457,61 @@ describe('Table', () => {
 
       sinon.assert.calledOnce(query.run);
       sinon.assert.calledWithExactly(query.run, [], tableData);
+
+    });
+
+  });
+
+  describe('validations', () => {
+
+    describe('on inserting rows', () => {
+
+      it('should throw if there are no rows', () => {
+
+        expect(() => table.insert()).to.throw('Expected one or more rows to insert, got 0.');
+
+      });
+
+      it('should test if each row is an object', () => {
+
+        const rows = [{a: 1}, {a: 2}, {a: 3}, {a: 4}];
+
+        table.insert(...rows);
+
+        expect(validation.test.toBeAnObject.callCount).to.equal(rows.length);
+        rows.forEach((...args) => sinon.assert.calledWithExactly(validation.test.toBeAnObject, ...args));
+
+      });
+
+    });
+
+    describe('on updating rows', () => {
+
+      const updateFunction = () => ({});
+
+      it('should throw if the "update" is not a function', () => {
+
+        expect(() => table.update()).to.throw('Expected "update" to be a function, got undefined.');
+
+      });
+
+      it('should test "update" to not mutate rows', () => {
+
+        table.update(updateFunction);
+
+        sinon.assert.calledOnce(validation.test.toNotMutateRows);
+        sinon.assert.calledWithExactly(validation.test.toNotMutateRows, updateFunction);
+
+      });
+
+      it('should test "update" to return an object', () => {
+
+        table.update(updateFunction);
+
+        sinon.assert.calledOnce(validation.test.toReturnAnObject);
+        sinon.assert.calledWithExactly(validation.test.toReturnAnObject, updateFunction);
+
+      });
 
     });
 
