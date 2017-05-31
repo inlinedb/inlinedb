@@ -139,23 +139,27 @@ describe('Database', () => {
 
       it('should throw error if idbName is not provided', () => {
 
-        expect(() => new Database()).to.throw('Expected database name to be a string, got undefined.');
+        const expectedMessage = 'Expected database name to be a string, got undefined.';
+
+        expect(() => new Database()).to.throw(expectedMessage);
 
       });
 
       it('should throw error if idbName is not a string', () => {
 
         const invalidIdbName = 123;
+        const expectedMessage = 'Expected database name to be a string, got number.';
 
-        expect(() => new Database(invalidIdbName)).to.throw('Expected database name to be a string, got number.');
+        expect(() => new Database(invalidIdbName)).to.throw(expectedMessage);
 
       });
 
       it('should throw error if idbName is not a valid name', () => {
 
         const invalidIdbName = 'test-';
+        const expectedMessage = 'Expected test- to match [a-zA-Z0-9]+([-_][a-zA-Z0-9]+)* pattern.';
 
-        expect(() => new Database(invalidIdbName)).to.throw('Expected test- to match [a-zA-Z0-9]+([-_][a-zA-Z0-9]+)* pattern.');
+        expect(() => new Database(invalidIdbName)).to.throw(expectedMessage);
 
       });
 
@@ -165,23 +169,27 @@ describe('Database', () => {
 
       it('should throw error if table name is not provided', () => {
 
-        expect(() => database.createTable()).to.throw('Expected database name to be a string, got undefined.');
+        const expectedMessage = 'Expected table name to be a string, got undefined.';
+
+        expect(() => database.createTable()).to.throw(expectedMessage);
 
       });
 
       it('should throw error if table name is not a string', () => {
 
         const invalidIdbName = 123;
+        const expectedMessage = 'Expected table name to be a string, got number.';
 
-        expect(() => database.createTable(invalidIdbName)).to.throw('Expected database name to be a string, got number.');
+        expect(() => database.createTable(invalidIdbName)).to.throw(expectedMessage);
 
       });
 
       it('should throw error if table name is not a valid name', () => {
 
         const invalidIdbName = 'test-';
+        const expectedMessage = 'Expected test- to match [a-zA-Z0-9]+([-_][a-zA-Z0-9]+)* pattern.';
 
-        expect(() => database.createTable(invalidIdbName)).to.throw('Expected test- to match [a-zA-Z0-9]+([-_][a-zA-Z0-9]+)* pattern.');
+        expect(() => database.createTable(invalidIdbName)).to.throw(expectedMessage);
 
       });
 

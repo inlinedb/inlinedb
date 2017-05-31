@@ -171,6 +171,15 @@ describe('validation', () => {
 
     });
 
+    it('should return "Expected database name to be a string"', () => {
+
+      const idbName = 123;
+      const expectedMessage = 'Expected table name to be a string, got number.';
+
+      expect(validation.errors.tableNameShouldBeString(idbName)).to.equal(expectedMessage);
+
+    });
+
     it('should return "Expected filename to match pattern."', () => {
 
       const filename = 'te#st';

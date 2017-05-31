@@ -5,6 +5,7 @@ const errors = {
   invalidFilename: filename => `Expected ${filename} to match [a-zA-Z0-9]+([-_][a-zA-Z0-9]+)* pattern.`,
   rowShouldBeAnObject: (index, type) => `Expected row to be an object, got ${type} at ${index}.`,
   rowsRequired: length => `Expected one or more rows to insert, got ${length}.`,
+  tableNameShouldBeString: idbName => `Expected table name to be a string, got ${typeof idbName}.`,
   updateShouldBeAFunction: update => `Expected "update" to be a function, got ${typeof update}.`,
   updateShouldNotMutate: () => 'Expected "update" to not mutate rows, got a function that will.',
   updateShouldReturnAnObject: type => `Expected "update" to return an object, got a function that will return ${type}.`

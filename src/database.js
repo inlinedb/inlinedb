@@ -17,7 +17,7 @@ class Database {
 
   createTable(tableName) {
 
-    assert.equal(typeof tableName, 'string', validation.errors.databaseNameShouldBeString(tableName));
+    assert.equal(typeof tableName, 'string', validation.errors.tableNameShouldBeString(tableName));
     assert(validation.test.toHaveValidFilename(tableName), validation.errors.invalidFilename(tableName));
 
     this.idbConfig.createTable(tableName);
