@@ -1,6 +1,6 @@
 {
   "name": "inlinedb",
-  "version": "1.7.1",
+  "version": "2.0.0",
   "description": "A portable database for node applications",
   "repository": "inlinedb/inlinedb",
   "author": "Gopikrishna Sathyamurthy",
