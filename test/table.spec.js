@@ -206,6 +206,12 @@ describe('Table', () => {
 
     });
 
+    it('should return this', () => {
+
+      expect(table.insert({})).to.equal(table);
+
+    });
+
   });
 
   describe('on querying rows', () => {
@@ -350,6 +356,12 @@ describe('Table', () => {
 
     });
 
+    it('should return this', () => {
+
+      expect(table.update(updateFunction)).to.equal(table);
+
+    });
+
   });
 
   describe('on deleting rows', () => {
@@ -435,6 +447,12 @@ describe('Table', () => {
 
     });
 
+    it('should return this', () => {
+
+      expect(table.delete()).to.equal(table);
+
+    });
+
   });
 
   describe('on reverting queries', () => {
@@ -457,6 +475,12 @@ describe('Table', () => {
 
       sinon.assert.calledOnce(query.run);
       sinon.assert.calledWithExactly(query.run, [], tableData);
+
+    });
+
+    it('should return this', () => {
+
+      expect(table.revert()).to.equal(table);
 
     });
 

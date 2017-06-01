@@ -32,6 +32,8 @@ class Table {
         }
       ));
 
+    return this;
+
   }
 
   insert(...rows) {
@@ -43,6 +45,8 @@ class Table {
       rows,
       type: query.types.INSERT
     });
+
+    return this;
 
   }
 
@@ -56,6 +60,8 @@ class Table {
   revert() {
 
     tableQueries.set(this, []);
+
+    return this;
 
   }
 
@@ -108,6 +114,8 @@ class Table {
           update
         }
       ));
+
+    return this;
 
   }
 

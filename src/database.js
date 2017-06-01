@@ -38,6 +38,8 @@ class Database {
 
     file.deleteTable(this.idbConfig.idbName, tableName);
 
+    return this;
+
   }
 
   listTables() {

@@ -103,6 +103,12 @@ describe('Database', () => {
 
     });
 
+    it('should return this', () => {
+
+      expect(database.dropTable()).to.equal(database);
+
+    });
+
   });
 
   describe('when dropping the database', () => {
