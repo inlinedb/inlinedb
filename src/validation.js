@@ -13,9 +13,9 @@ const errors = {
 
 const assertToBeAnObject = (subject, callback) => {
 
-  assert.notEqual(subject, null, callback('null'));
+  assert.notStrictEqual(subject, null, callback('null'));
   assert(!Array.isArray(subject), callback('array'));
-  assert.equal(typeof subject, 'object', callback(typeof subject));
+  assert.strictEqual(typeof subject, 'object', callback(typeof subject));
 
 };
 

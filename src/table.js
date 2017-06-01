@@ -89,7 +89,7 @@ class Table {
 
   update(update, criteria = () => true) {
 
-    assert.equal(typeof update, 'function', validation.errors.updateShouldBeAFunction(update));
+    assert.strictEqual(typeof update, 'function', validation.errors.updateShouldBeAFunction(update));
 
     validation.test.toNotMutateRows(update);
     validation.test.toReturnAnObject(update);

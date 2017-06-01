@@ -8,7 +8,7 @@ class Database {
 
   constructor(idbName) {
 
-    assert.equal(typeof idbName, 'string', validation.errors.databaseNameShouldBeString(idbName));
+    assert.strictEqual(typeof idbName, 'string', validation.errors.databaseNameShouldBeString(idbName));
     assert(validation.test.toHaveValidFilename(idbName), validation.errors.invalidFilename(idbName));
 
     this.idbConfig = new idb.IDB(idbName);
@@ -17,7 +17,7 @@ class Database {
 
   createTable(tableName) {
 
-    assert.equal(typeof tableName, 'string', validation.errors.tableNameShouldBeString(tableName));
+    assert.strictEqual(typeof tableName, 'string', validation.errors.tableNameShouldBeString(tableName));
     assert(validation.test.toHaveValidFilename(tableName), validation.errors.invalidFilename(tableName));
 
     this.idbConfig.createTable(tableName);
