@@ -2,7 +2,7 @@
     <img alt="inlinedb" src="https://raw.githubusercontent.com/inlinedb/inlinedb/icons/idb.png">
 </p>
 
-<h3 align="center">
+<h3 align="center" style="text-align: center;">
     InlineDB
 </h3>
 
