@@ -29,7 +29,7 @@
 ### Notes
 
 Version 1.0.x and 1.7.x has been deprecated in favour of 2.x. The older versions were either incomplete or failing when
-used. v2.0 is test.
+used.
 
 ### Compatibility
 
