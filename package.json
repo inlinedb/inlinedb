@@ -13,16 +13,16 @@
   },
   "homepage": "https://github.com/inlinedb/inlinedb#readme",
   "devDependencies": {
-    "babel-eslint": "7.2.3",
-    "code": "4.0.0",
-    "eslint": "3.19.0",
-    "mocha": "3.4.1",
-    "nyc": "10.3.2",
-    "sinon": "2.2.0"
+    "babel-eslint": "8.0.1",
+    "code": "5.1.0",
+    "eslint": "4.8.0",
+    "mocha": "4.0.1",
+    "nyc": "11.2.1",
+    "sinon": "4.0.1"
   },
   "dependencies": {
     "mkdirp": "0.5.1",
-    "rimraf": "2.6.1"
+    "rimraf": "2.6.2"
   },
   "scripts": {
     "eslint": "eslint . --ignore-path .gitignore",
