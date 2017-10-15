@@ -35,7 +35,7 @@ describe('filter', () => {
 
     describe('given the filter function', () => {
 
-      it('should return all the rows when there is no filter', async () => {
+      it('should return all the rows when there is no filter', () => {
 
         const result = filter.toFunction()(tableData);
 
@@ -43,7 +43,7 @@ describe('filter', () => {
 
       });
 
-      it('should return the rows satisfied by a filter function', async () => {
+      it('should return the rows satisfied by a filter function', () => {
 
         const filterFunction = row => row.column === 'column match';
         const result = filter.toFunction(filterFunction)(tableData);
@@ -55,7 +55,7 @@ describe('filter', () => {
 
       });
 
-      it('should return the row with matching id', async () => {
+      it('should return the row with matching id', () => {
 
         const id = 10;
         const result = filter.toFunction(id)(tableData);
@@ -67,7 +67,7 @@ describe('filter', () => {
 
       });
 
-      it('should return the rows with matching ids', async () => {
+      it('should return the rows with matching ids', () => {
 
         const id1 = 10;
         const id2 = 20;
