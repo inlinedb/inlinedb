@@ -15,7 +15,7 @@
   "devDependencies": {
     "babel-eslint": "8.0.1",
     "code": "5.1.0",
-    "eslint": "4.8.0",
+    "eslint": "4.9.0",
     "eslint-config-inlinedb": "github:inlinedb/eslint-config-inlinedb#master",
     "mocha": "4.0.1",
     "nyc": "11.2.1",
