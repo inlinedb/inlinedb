@@ -13,10 +13,10 @@
   },
   "homepage": "https://github.com/inlinedb/inlinedb#readme",
   "devDependencies": {
+    "@inlinedb/eslint-config-inlinedb": "1.0.0",
     "babel-eslint": "8.0.1",
     "code": "5.1.0",
     "eslint": "4.9.0",
-    "eslint-config-inlinedb": "github:inlinedb/eslint-config-inlinedb#67b8985fc43e9047db454197743111387ceeea85",
     "mocha": "4.0.1",
     "nyc": "11.2.1",
     "sinon": "4.0.1"
